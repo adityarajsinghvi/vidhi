@@ -16,14 +16,16 @@ export function SelectField({
   required,
   disabled,
   className,
+  onValueChange,
 }: {
-  name: string;
+  name?: string;
   options: SelectOption[];
   defaultValue?: string;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
   className?: string;
+  onValueChange?: (value: string) => void;
 }) {
   const [value, setValue] = useState(defaultValue);
   const [open, setOpen] = useState(false);
@@ -77,6 +79,7 @@ export function SelectField({
                 onClick={() => {
                   setValue(o.value);
                   setOpen(false);
+                  onValueChange?.(o.value);
                 }}
                 className={`block w-full px-4 py-2.5 text-left text-sm ${
                   o.value === value

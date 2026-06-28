@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { VoiceRecorder } from "@/app/(dashboard)/voice-recorder";
 
 export function BottomNav() {
   const pathname = usePathname();
@@ -11,13 +12,7 @@ export function BottomNav() {
       <NavTab href="/dashboard" label="Home" icon="▦" active={pathname === "/dashboard"} />
       <NavTab href="/vendors" label="Vendors" icon="☷" active={pathname.startsWith("/vendors")} />
       <div className="flex flex-1 justify-center">
-        <button
-          type="button"
-          title="Voice commands — coming soon"
-          className="-mt-3.5 flex h-[54px] w-[54px] items-center justify-center rounded-card bg-accent text-[22px] text-accent-ink shadow-[0_8px_20px_var(--color-accent-glow)]"
-        >
-          🎙
-        </button>
+        <VoiceRecorder />
       </div>
       <NavTab href="/tasks" label="Tasks" icon="✓" active={pathname.startsWith("/tasks")} />
       <NavTab href="/more" label="More" icon="⋯" active={pathname.startsWith("/more")} />
