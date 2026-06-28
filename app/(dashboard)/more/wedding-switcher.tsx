@@ -10,18 +10,15 @@ export async function WeddingSwitcher() {
       {weddings.map((w) => {
         const isActive = w.id === active.id;
         return (
-          <form key={w.id} action={switchWedding}>
-            <input type="hidden" name="weddingId" value={w.id} />
-            <button
-              type="submit"
-              disabled={isActive}
-              className={`flex w-full items-center justify-between rounded-card border p-3.5 text-left ${
-                isActive
-                  ? "border-accent bg-accent-glow"
-                  : "border-field-border bg-field"
-              }`}
-            >
-              <div>
+          <div
+            key={w.id}
+            className={`flex items-center gap-2 rounded-card border p-3.5 ${
+              isActive ? "border-accent bg-accent-glow" : "border-field-border bg-field"
+            }`}
+          >
+            <form action={switchWedding} className="min-w-0 flex-1">
+              <input type="hidden" name="weddingId" value={w.id} />
+              <button type="submit" disabled={isActive} className="w-full text-left">
                 <div className="text-sm font-semibold text-ink">{w.couple_names}</div>
                 {w.start_date && (
                   <div className="mt-0.5 text-xs text-muted">
@@ -32,10 +29,13 @@ export async function WeddingSwitcher() {
                     })}
                   </div>
                 )}
-              </div>
-              {isActive && <span className="text-xs font-medium text-accent">Active</span>}
-            </button>
-          </form>
+              </button>
+            </form>
+            {isActive && <span className="text-xs font-medium text-accent">Active</span>}
+            <Link href={`/weddings/${w.id}/edit`} className="text-xs font-medium text-muted">
+              Edit
+            </Link>
+          </div>
         );
       })}
 
