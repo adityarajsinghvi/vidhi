@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#0e0d0c">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0e0d0c"/>
+    <rect x="500" y="270" width="200" height="200" rx="56" fill="#e0a21e"/>
+    <text x="600" y="430" font-family="Marcellus, serif" font-size="150" fill="#1a1408" text-anchor="middle">व</text>
+    <text x="600" y="560" font-family="Marcellus, serif" font-size="84" fill="#f5ede0" text-anchor="middle" letter-spacing="2">Vidhi</text>
+  </svg>
+</template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; }
+  @keyframes vidhiFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes vidhiPulse { 0%,100%{transform:scale(1);opacity:0.5} 50%{transform:scale(1.5);opacity:0} }
+  @keyframes vidhiUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+  *::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<div style="min-height:100vh; display:flex; flex-direction:column; align-items:center; gap:20px; padding:34px 16px; box-sizing:border-box; background:#0e0d0c; font-family:'Geist',system-ui,sans-serif;">
+
+  <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center; align-items:center; background:#1b1917; padding:9px 12px; border-radius:{{ radBtn }}; border:1px solid #2c2825;">
+    <span style="color:#8a8178; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">Style</span>
+    <button onClick="{{ setDirA }}" style="{{ dirABtn }}">A · Warm</button>
+    <button onClick="{{ setDirB }}" style="{{ dirBBtn }}">B · Ledger</button>
+    <span style="width:1px; height:18px; background:#2c2825; margin:0 4px;"></span>
+    <span style="color:#8a8178; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">Accent</span>
+    <button onClick="{{ setMarigold }}" style="{{ marigoldBtn }}">Marigold</button>
+    <button onClick="{{ setMaroon }}" style="{{ maroonBtn }}">Maroon</button>
+    <span style="width:1px; height:18px; background:#2c2825; margin:0 4px;"></span>
+    <span style="color:#8a8178; font-size:11px; letter-spacing:0.05em; text-transform:uppercase;">Mode</span>
+    <button onClick="{{ setLight }}" style="{{ lightBtn }}">Light</button>
+    <button onClick="{{ setDark }}" style="{{ darkBtn }}">Dark</button>
+    <span style="width:1px; height:18px; background:#2c2825; margin:0 4px;"></span>
+    <button onClick="{{ goLogin }}" style="{{ resetBtn }}">↺ Login</button>
+  </div>
+
+  <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dark="{{ isDark }}" hint-size="402px,874px">
+    <div style="height:100%; display:flex; flex-direction:column; position:relative; overflow:hidden; background:{{ screenBg }}; font-family:'Geist',sans-serif;">
+
+      <!-- ===== LOGIN ===== -->
+      <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+        <div style="flex:1; display:flex; flex-direction:column; position:relative; overflow:hidden;">
+          <div style="position:absolute; inset:0; opacity:0.55; background:radial-gradient(120% 55% at 50% -8%, {{ accentGlow }}, transparent 62%); pointer-events:none;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:100px 28px 40px; position:relative; z-index:1;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:18px; text-align:center;">
+              <div style="width:64px; height:64px; border-radius:18px; background:{{ accent }}; display:flex; align-items:center; justify-content:center; box-shadow:0 12px 30px {{ accentGlow }}; animation:vidhiFloat 5s ease-in-out infinite;">
+                <span style="font-family:'Marcellus',serif; font-size:34px; color:{{ accentInk }}; line-height:1;">व</span>
+              </div>
+              <div style="font-family:'Marcellus',serif; font-size:46px; letter-spacing:0.02em; color:{{ ink }}; line-height:1;">Vidhi</div>
+              <div style="font-size:15px; line-height:1.5; color:{{ muted }}; max-width:262px;">The quiet ledger behind every wedding. Track vendors, payments &amp; tasks — without leaving WhatsApp.</div>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <label style="font-size:13px; color:{{ muted }}; padding-left:4px;">Mobile number</label>
+                <div style="display:flex; align-items:center; gap:10px; background:{{ field }}; border:1px solid {{ fieldBorder }}; border-radius:{{ radBtn }}; padding:14px 16px;">
+                  <span style="font-family:'Geist Mono',monospace; font-size:16px; color:{{ ink }};">+91</span>
+                  <span style="width:1px; height:20px; background:{{ fieldBorder }};"></span>
+                  <span style="font-family:'Geist Mono',monospace; font-size:16px; letter-spacing:0.08em; color:{{ ink }};">98•••• ••12</span>
+                </div>
+              </div>
+              <button onClick="{{ goOnboard }}" style="border:none; border-radius:{{ radBtn }}; padding:16px; background:{{ accent }}; color:{{ accentInk }}; font-family:'Geist',sans-serif; font-size:16px; font-weight:600; box-shadow:0 10px 24px {{ accentGlow }}; cursor:pointer;">Send OTP</button>
+              <div style="text-align:center; font-size:12px; color:{{ faint }}; margin-top:2px;">Phone OTP only — no passwords, no email.</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===== ONBOARDING (Add to Home Screen) ===== -->
+      <sc-if value="{{ isOnboard }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; padding:64px 26px 32px; position:relative; z-index:1;">
+          <div style="display:flex; gap:6px; margin-bottom:28px;">
+            <div style="height:4px; flex:1; border-radius:2px; background:{{ accent }};"></div>
+            <div style="height:4px; flex:1; border-radius:2px; background:{{ accent }};"></div>
+            <div style="height:4px; flex:1; border-radius:2px; background:{{ fieldBorder }};"></div>
+          </div>
+          <div style="font-family:{{ headFont }}; font-weight:{{ headWeight }}; letter-spacing:{{ headLs }}; font-size:28px; color:{{ ink }}; line-height:1.2; margin-bottom:8px;">Add Vidhi to your<br>Home Screen</div>
+          <div style="font-size:14px; line-height:1.55; color:{{ muted }}; margin-bottom:26px;">Reminders only reach your lock screen once Vidhi lives on your home screen. Takes 10 seconds.</div>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; gap:13px; align-items:center; background:{{ field }}; border:1px solid {{ fieldBorder }}; border-radius:{{ radBtn }}; padding:14px 16px;">
+              <div style="width:34px; height:34px; border-radius:9px; background:{{ accentGlow }}; display:flex; align-items:center; justify-content:center; color:{{ accent }}; font-size:18px;">⤴</div>
+              <div style="font-size:14px; color:{{ ink }};">Tap the <b>Share</b> icon in Safari</div>
+            </div>
+            <div style="display:flex; gap:13px; align-items:center; background:{{ field }}; border:1px solid {{ fieldBorder }}; border-radius:{{ radBtn }}; padding:14px 16px;">
+              <div style="width:34px; height:34px; border-radius:9px; background:{{ accentGlow }}; display:flex; align-items:center; justify-content:center; color:{{ accent }}; font-size:18px;">＋</div>
+              <div style="font-size:14px; color:{{ ink }};">Choose <b>Add to Home Screen</b></div>
+            </div>
+            <div style="display:flex; gap:13px; align-items:center; background:{{ field }}; border:1px solid {{ fieldBorder }}; border-radius:{{ radBtn }}; padding:14px 16px;">
+              <div style="width:34px; height:34px; border-radius:9px; background:{{ accent }}; display:flex; align-items:center; justify-content:center; color:{{ accentInk }};">
+                <span style="font-family:'Marcellus',serif; font-size:18px;">व</span>
+              </div>
+              <div style="font-size:14px; color:{{ ink }};">Open Vidhi from your home screen</div>
+            </div>
+          </div>
+          <div style="flex:1;"></div>
+          <button onClick="{{ goDash }}" style="border:none; border-radius:{{ radBtn }}; padding:16px; background:{{ accent }}; color:{{ accentInk }}; font-size:16px; font-weight:600; box-shadow:0 10px 24px {{ accentGlow }}; cursor:pointer;">I've added it — continue</button>
+          <button onClick="{{ goDash }}" style="border:none; background:transparent; color:{{ faint }}; font-size:13px; padding:12px; cursor:pointer;">Skip for now</button>
+        </div>
+      </sc-if>
+
+      <!-- ===== APP SHELL (scrollable content + bottom nav) ===== -->
+      <sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; min-height:0;">
+          <div style="flex:1; overflow-y:auto; padding-bottom:96px;">
+
+            <!-- DASHBOARD -->
+            <sc-if value="{{ isDash }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:60px 20px 0;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+                  <div>
+                    <div style="font-size:13px; color:{{ muted }};">Wedding</div>
+                    <div style="font-family:{{ headFont }}; font-weight:{{ headWeight }}; letter-spacing:{{ headLs }}; font-size:26px; color:{{ ink }}; line-height:1.15;">Aanya &amp; Vikram</div>
+                    <div style="font-size:13px; color:{{ accent }}; font-weight:500; margin-top:3px;">12 Dec 2026 · {{ daysToGo }} days to go</div>
+                  </div>
+                  <div style="width:42px; height:42px; border-radius:12px; background:{{ field }}; border:1px solid {{ fieldBorder }}; display:flex; align-items:center; justify-content:center; font-family:'Marcellus',serif; font-size:18px; color:{{ accent }};">व</div>
+                </div>
+
+                <!-- Budget rollup -->
+                <div style="background:{{ card }}; border:1px solid {{ fieldBorder }}; border-radius:{{ rad }}; padding:20px; margin-bottom:18px; box-shadow:{{ cardShadow }};">
+                  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px;">
+                    <span style="font-size:13px; color:{{ muted }};">Pending across all vendors</span>
+                    <span style="font-size:12px; color:{{ faint }};">of {{ budgetStr }}</span>
+                  </div>
+                  <div style="font-family:'Geist Mono',monospace; font-size:36px; font-weight:600; color:{{ ink }}; letter-spacing:-0.02em; line-height:1;">{{ pendingStr }}</div>
+                  <div style="height:8px; border-radius:5px; background:{{ track }}; margin:16px 0 12px; overflow:hidden; display:flex;">
+                    <div style="width:{{ paidPct }}%; background:{{ accent }};"></div>
+                  </div>
+                  <div style="display:flex; gap:18px;">
+                    <div><div style="font-size:11px; color:{{ faint }}; text-transform:uppercase; letter-spacing:0.04em;">Paid</div><div style="font-family:'Geist Mono',monospace; font-size:15px; color:{{ ink }}; font-weight:500;">{{ paidStr }}</div></div>
+                    <div><div style="font-size:11px; color:{{ faint }}; text-transform:uppercase; letter-spacing:0.04em;">Committed</div><div style="font-family:'Geist Mono',monospace; font-size:15px; color:{{ ink }}; font-weight:500;">{{ committedStr }}</div></div>
+                    <div><div style="font-size:11px; color:{{ faint }}; text-transform:uppercase; letter-spacing:0.04em;">Vendors</div><div style="font-family:'Geist Mono',monospace; font-size:15px; color:{{ ink }}; font-weight:500;">{{ vendorCount }}</div></div>
+                  </div>
+                </div>
+
+                <!-- Ceremonies -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                  <span style="font-size:15px; font-weight:600; color:{{ ink }};">Ceremonies</span>
+                  <span style="font-size:13px; color:{{ accent }};">5 events</span>
+                </div>
+                <div style="display:flex; gap:10px; overflow-x:auto; margin:0 -20px 22px; padding:0 20px;">
+                  <sc-for list="{{ ceremonies }}" as="c" hint-placeholder-count="5">
+                    <div onClick="{{ goTasks }}" style="flex:0 0 auto; width:124px; background:{{ card }}; border:1px solid {{ fieldBorder }}; border-radius:{{ rad }}; padding:14px; box-shadow:{{ cardShadow }}; cursor:pointer;">
+                      <div style="width:30px; height:30px; border-radius:9px; background:{{ accentGlow }}; display:flex; align-items:center; justify-content:center; color:{{ accent }}; font-size:15px; margin-bottom:10px;">{{ c.icon }}</div>
+                      <div style="font-size:14px; font-weight:600; color:{{ ink }};">{{ c.name }}</div>
+                      <div style="font-size:12px; color:{{ muted }}; margin-top:2px;">{{ c.date }}</div>
+                      <div style="font-family:'Geist Mono',monospace; font-size:11px; color:{{ faint }}; margin-top:8px;">{{ c.taskStr }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <!-- Needs attention -->
+                <div style="font-size:15px; font-weight:600; color:{{ ink }}; margin-bottom:10px;">Needs your attention</div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                  <sc-for list="{{ attention }}" as="v" hint-placeholder-count="3">
+                    <div onClick="{{ v.open }}" style="display:flex; align-items:center; gap:13px; background:{{ card }}; border:1px solid {{ fieldBorder }}; border-radius:{{ rad }}; padding:14px; box-shadow:{{ cardShadow }}; cursor:pointer;">
+                      <div style="width:40px; height:40px; border-radius:{{ avatarRad }}; background:{{ v.catColor }}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:600; flex-shrink:0;">{{ v.initials }}</div>
+                      <div style="flex:1; min-width:0;">
+                        <div style="font-size:14px; font-weight:600; color:{{ ink }};">{{ v.name }}</div>
+                        <div style="font-size:12px; color:{{ muted }};">{{ v.category }}</div>
+                      </div>
+                      <div style="text-align:right;">
+                        <div style="font-family:'Geist Mono',monospace; font-size:14px; font-weight:600; color:{{ ink }};">{{ v.pendingStr }}</div>
+                        <div style="font-size:11px; color:{{ accent }};">balance due</div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- VENDORS LIST -->
+            <sc-if value="{{ isVendors }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:60px 20px 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                  <div style="font-family:{{ headFont }}; font-weight:{{ headWeight }}; letter-spacing:{{ headLs }}; font-size:30px; color:{{ ink }};">Vendors</div>
+                  <button onClick="{{ goAdd }}" style="border:none; width:38px; height:38px; border-radius:11px; background:{{ accent }}; color:{{ accentInk }}; font-size:22px; line-height:1; cursor:pointer; box-shadow:0 6px 16px {{ accentGlow }};">＋</button>
+                </div>
+                <div style="display:flex; align-items:center; gap:10px; background:{{ field }}; border:1px solid {{ fieldBorder }}; border-radius:13px; padding:11px 14px; margin-bottom:18px;">
+                  <span style="color:{{ faint }};">⌕</span>
+                  <span style="font-size:14px; color:{{ faint }};">Search vendors</span>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                  <sc-for list="{{ vendors }}" as="v" hint-placeholder-count="6">
+                    <div onClick="{{ v.open }}" style="background:{{ card }}; border:1px solid {{ fieldBorder }}; border-radius:{{ rad }}; padding:14px; box-shadow:{{ cardShadow }}; cursor:pointer;">
+                      <div style="display:flex; align-items:center; gap:13px;">
+                        <div style="width:40px; height:40px; border-radius:{{ avatarRad }}; background:{{ v.catColor }}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px; font-weight:600; flex-shrink:0;">{{ v.initials }}</div>
+                        <div style="flex:1; min-width:0;">
+                          <div style="font-size:14px; font-weight:600; color:{{ ink }};">{{ v.name }}</div>
+                          <div style="font-size:12px; color:{{ muted }};">{{ v.category }}</div>
+                        </div>
+                        <div style="font-family:'Geist Mono',monospace; font-size:11px; color:{{ faint }};">{{ v.pct }}% paid</div>
+                      </div>
+                      <div style="height:6px; border-radius:4px; background:{{ track }}; margin-top:12px; overflow:hidden; display:flex;">
+                        <div style="width:{{ v.pct }}%; background:{{ accent }};"></div>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- VENDOR DETAIL -->
+            <sc-if value="{{ isVendorDetail }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:56px 0 0;">
+                <div style="padding:0 20px;">
+                  <button onClick="{{ goVendors }}" style="border:none; background:transparent; color:{{ accent }}; font-size:14px; padding:6px 0; cursor:pointer;">‹ Vendors</button>
+                  <div style="display:flex; align-items:center; gap:14px; margin:8px 0 18px;">
+                    <div style="width:52px; height:52px; border-radius:{{ radBtn }}; background:{{ sv.catColor }}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; font-weight:600;">{{ sv.initials }}</div>
+                    <div>
+                      <div style="font-family:{{ headFont }}; font-weight:{{ headWeight }}; letter-spacing:{{ headLs }}; font-size:24px; color:{{ ink }}; line-height:1.1;">{{ sv.name }}</div>
+                      <div style="font-size:13px; color:{{ muted }};">{{ sv.category }} · {{ sv.phone }}</div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex; gap:10px; margin-bottom:16px;">
+                    <div style="flex:1; background:{{ card }}; border:1px solid {{ fieldBorder }}; border-radius:{{ radBtn }}; padding:14px; box-shadow:{{ cardShadow }};">
+                      <div style="font-size:11px; color:{{ faint }}; text-transform:uppercase; letter-spacing:0.04em;">Advance paid</div>
+                      <div style="font-family:'Geist Mono',monospace; font-size:18px; font-weight:600; color:{{ ink }}; margin-top:4px;">{{ sv.paidStr }}</div>
+                    </div>
+                    <div style="flex:1; background:{{ card }}; border:1px solid {{ fieldBorder }}; border-radius:{{ radBtn }}; padding:14px; box-shadow:{{ cardShadow }};">
+                      <div style="font-size:11px; color:{{ faint }}; text-transform:uppercase; letter-spacing:0.04em;">Balance due</div>
+                      <div style="font-family:'Geist Mono',monospace; font-size:18px; font-weight:600; color:{{ accent }}; margin-top:4px;">{{ sv.pendingStr }}</div>
+                    </div>
+                  </div>
+
+                  <button style="width:100%; border:none; border-radius:{{ radBtn }}; padding:15px; background:#25D366; color:#06351a; font-size:15px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:9px; margin-bottom:8px;">
+                    <span style="font-size:17px;">✆</span> Message on WhatsApp
+                  </button>
+                  <div style="font-size:11px; color:{{ faint }}; text-align:center; margin-bottom:20px;">Opens your WhatsApp with a pre-filled note — you tap send.</div>
+
+                  <div style="font-size:14px; font-weight:600; color:{{ ink }}; margin-bottom:10px;">Payment history</div>
+                </div>
+                <div style="display:flex; flex-direction:column;">
+                  <sc-for list="{{ sv.payments }}" as="p" hint-placeholder-count="3">
+                    <div style="display:flex; align-items:center; gap:13px; padding:13px 20px; border-top:1px solid {{ fieldBorder }};">
+                      <div style="width:34px; height:34px; border-radius:10px; background:{{ accentGlow }}; display:flex; align-items:center; justify-content:center; color:{{ accent }}; font-size:13px; font-family:'Geist Mono',monospace;">{{ p.modeShort }}</div>
+                      <div style="flex:1;">
+                        <div style="font-size:14px; color:{{ ink }}; font-weight:500;">{{ p.label }}</div>
+                        <div style="font-size:12px; color:{{ muted }};">{{ p.date }} · via {{ p.via }}</div>
+                      </div>
+                      <div style="font-family:'Geist Mono',monospace; font-size:15px; font-weight:600; color:{{ ink }};">{{ p.amountStr }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="padding:16px 20px;">
+                  <button onClick="{{ goVoice }}" style="width:100%; border:1px dashed {{ fieldBorder }}; background:transparent; border-radius:{{ radBtn }}; padding:14px; color:{{ accent }}; font-size:14px; font-weight:500; cursor:pointer;">＋ Record a payment</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- TASKS -->
+            <sc-if value="{{ isTasks }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:60px 20px 0;">
+                <div style="font-family:{{ headFont }}; font-weight:{{ headWeight }}; letter-spacing:{{ headLs }}; font-size:30px; color:{{ ink }}; margin-bottom:18px;">Tasks</div>
+                <sc-for list="{{ taskGroups }}" as="g" hint-placeholder-count="3">
+                  <div style="margin-bottom:20px;">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                      <span style="font-size:15px;">{{ g.icon }}</span>
+                      <span style="font-size:15px; font-weight:600; color:{{ ink }};">{{ g.name }}</span>
+                      <span style="font-family:'Geist Mono',monospace; font-size:12px; color:{{ faint }};">{{ g.progress }}</span>
+                    </div>
+                    <div style="background:{{ card }}; border:1px solid {{ fieldBorder }}; border-radius:{{ rad }}; overflow:hidden; box-shadow:{{ cardShadow }};">
+                      <sc-for list="{{ g.tasks }}" as="t" hint-placeholder-count="2">
+                        <div onClick="{{ t.toggle }}" style="display:flex; align-items:center; gap:12px; padding:13px 15px; border-top:{{ t.border }}; cursor:pointer;">
+                          <div style="width:21px; height:21px; border-radius:7px; border:1.5px solid {{ t.checkBorder }}; background:{{ t.checkBg }}; display:flex; align-items:center; justify-content:center; color:{{ accentInk }}; font-size:13px; flex-shrink:0;">{{ t.check }}</div>
+                          <div style="flex:1; font-size:14px; color:{{ t.textColor }}; text-decoration:{{ t.strike }};">{{ t.desc }}</div>
+                          <div style="font-size:12px; color:{{ faint }};">{{ t.vendor }}</div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <!-- ADD VENDOR -->
+            <sc-if value="{{ isAdd }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:56px 20px 0;">
+                <button onClick="{{ goVendors }}" style="border:none; background:transparent; color:{{ accent }}; font-size:14px; padding:6px 0; cursor:pointer;">‹ Vendors</button>
+                <div style="font-family:{{ headFont }}; font-weight:{{ headWeight }}; letter-spacing:{{ headLs }}; font-size:28px; color:{{ ink }}; margin:6px 0 20px;">Add a vendor</div>
+                <div style="display:flex; flex-direction:column; gap:14px;">
+                  <div><label style="font-size:13px; color:{{ muted }}; display:block; margin-bottom:6px; padding-left:2px;">Name</label><div style="background:{{ field }}; border:1px solid {{ fieldBorder }}; border-radius:13px; padding:13px 15px; font-size:14px; color:{{ faint }};">e.g. Sharma Caterers</div></div>
+                  <div><label style="font-size:13px; color:{{ muted }}; display:block; margin-bottom:6px; padding-left:2px;">Category</label>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                      <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="5">
+                        <div style="padding:8px 13px; border-radius:10px; background:{{ field }}; border:1px solid {{ fieldBorder }}; font-size:13px; color:{{ ink }};">{{ cat }}</div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:12px;">
+                    <div style="flex:1;"><label style="font-size:13px; color:{{ muted }}; display:block; margin-bottom:6px; padding-left:2px;">Phone</label><div style="background:{{ field }}; border:1px solid {{ fieldBorder }}; border-radius:13px; padding:13px 15px; font-family:'Geist Mono',monospace; font-size:14px; color:{{ faint }};">+91 …</div></div>
+                    <div style="flex:1;"><label style="font-size:13px; color:{{ muted }}; display:block; margin-bottom:6px; padding-left:2px;">Quote ₹</label><div style="background:{{ field }}; border:1px solid {{ fieldBorder }}; border-radius:13px; padding:13px 15px; font-family:'Geist Mono',monospace; font-size:14px; color:{{ faint }};">0</div></div>
+                  </div>
+                  <div><label style="font-size:13px; color:{{ muted }}; display:block; margin-bottom:6px; padding-left:2px;">Serves which ceremonies</label>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                      <sc-for list="{{ ceremonyChips }}" as="cc" hint-placeholder-count="5">
+                        <div style="padding:8px 13px; border-radius:10px; background:{{ cc.bg }}; border:1px solid {{ cc.border }}; font-size:13px; color:{{ cc.color }};">{{ cc.name }}</div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+                <button onClick="{{ goVendors }}" style="width:100%; border:none; border-radius:{{ radBtn }}; padding:15px; background:{{ accent }}; color:{{ accentInk }}; font-size:15px; font-weight:600; margin-top:22px; cursor:pointer; box-shadow:0 8px 20px {{ accentGlow }};">Save vendor</button>
+              </div>
+            </sc-if>
+
+          </div>
+
+          <!-- BOTTOM NAV -->
+          <div style="position:absolute; left:0; right:0; bottom:0; height:84px; background:{{ navBg }}; border-top:1px solid {{ fieldBorder }}; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); display:flex; align-items:flex-start; padding:10px 18px 0; z-index:40;">
+            <div onClick="{{ goDash }}" style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; color:{{ tabDash }};"><span style="font-size:19px;">▦</span><span style="font-size:10px;">Home</span></div>
+            <div onClick="{{ goVendors }}" style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; color:{{ tabVendors }};"><span style="font-size:19px;">☷</span><span style="font-size:10px;">Vendors</span></div>
+            <div style="flex:1; display:flex; justify-content:center;">
+              <div onClick="{{ goVoice }}" style="width:54px; height:54px; border-radius:18px; background:{{ accent }}; margin-top:-14px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px {{ accentGlow }}; cursor:pointer; color:{{ accentInk }}; font-size:22px;">🎙</div>
+            </div>
+            <div onClick="{{ goTasks }}" style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; color:{{ tabTasks }};"><span style="font-size:19px;">✓</span><span style="font-size:10px;">Tasks</span></div>
+            <div onClick="{{ goOnboard }}" style="flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; color:{{ tabMore }};"><span style="font-size:19px;">⋯</span><span style="font-size:10px;">More</span></div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ===== VOICE / AI CONFIRMATION ===== -->
+      <sc-if value="{{ isVoice }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute; inset:0; background:{{ voiceScrim }}; z-index:60; display:flex; flex-direction:column;">
+          <div onClick="{{ goDash }}" style="flex:1; cursor:pointer;"></div>
+          <div style="background:{{ sheetBg }}; border-radius:28px 28px 0 0; padding:14px 22px 36px; box-shadow:0 -20px 50px rgba(0,0,0,0.35); animation:vidhiUp 0.3s ease;">
+            <div style="width:38px; height:4px; border-radius:2px; background:{{ fieldBorder }}; margin:0 auto 20px;"></div>
+
+            <div style="display:flex; flex-direction:column; align-items:center; gap:8px; margin-bottom:22px;">
+              <div style="position:relative; width:70px; height:70px; display:flex; align-items:center; justify-content:center;">
+                <div style="position:absolute; inset:0; border-radius:50%; background:{{ accent }}; animation:vidhiPulse 1.8s ease-out infinite;"></div>
+                <div style="position:relative; width:64px; height:64px; border-radius:50%; background:{{ accent }}; display:flex; align-items:center; justify-content:center; color:{{ accentInk }}; font-size:26px;">🎙</div>
+              </div>
+              <div style="font-size:13px; color:{{ muted }};">Listening… speak in Hindi or English</div>
+              <div style="font-family:'Geist Mono',monospace; font-size:15px; color:{{ ink }}; background:{{ field }}; border:1px solid {{ fieldBorder }}; padding:8px 14px; border-radius:11px;">"Sharma ko 50 hazaar mil gaye UPI se"</div>
+            </div>
+
+            <div style="background:{{ card }}; border:1px solid {{ accent }}; border-radius:{{ rad }}; padding:18px; box-shadow:0 10px 30px {{ accentGlow }};">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                <span style="font-size:11px; font-weight:600; color:{{ accent }}; background:{{ accentGlow }}; padding:4px 9px; border-radius:7px; letter-spacing:0.03em;">PAYMENT RECEIVED</span>
+                <span style="font-size:12px; color:{{ faint }};">Confirm before saving</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:11px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:13px; color:{{ muted }};">Amount</span><span style="font-family:'Geist Mono',monospace; font-size:18px; font-weight:600; color:{{ ink }};">₹50,000</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:13px; color:{{ muted }};">Vendor</span><span style="font-size:14px; color:{{ ink }}; font-weight:500;">Sharma Caterers</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:13px; color:{{ muted }};">Mode</span><span style="font-size:14px; color:{{ ink }}; font-weight:500;">UPI</span></div>
+                <div style="display:flex; justify-content:space-between; align-items:center;"><span style="font-size:13px; color:{{ muted }};">Type</span><span style="font-size:14px; color:{{ ink }}; font-weight:500;">Advance · part-payment</span></div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:16px;">
+              <button onClick="{{ goVendors }}" style="flex:1; border:1px solid {{ fieldBorder }}; background:transparent; border-radius:13px; padding:14px; color:{{ ink }}; font-size:14px; font-weight:500; cursor:pointer;">Edit</button>
+              <button onClick="{{ goDash }}" style="flex:2; border:none; border-radius:13px; padding:14px; background:{{ accent }}; color:{{ accentInk }}; font-size:14px; font-weight:600; cursor:pointer;">Confirm &amp; save</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </x-import>
+
+  <div style="color:#5c554e; font-size:12px; font-family:'Geist Mono',monospace; text-align:center; max-width:380px;">Tap through: Login → Add to Home Screen → Home. Bottom bar switches Vendors / Tasks / 🎙 voice. Toggle accent &amp; mode any time.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { screen: 'login', accent: 'marigold', mode: 'dark', dir: 'A', vendorId: 1, done: {} };
+
+  fmt(n){ const s=Math.round(n).toString(); let last3=s.slice(-3), rest=s.slice(0,-3); if(rest) rest=rest.replace(/\B(?=(\d{2})+(?!\d))/g,','); return '₹'+(rest?rest+',':'')+last3; }
+
+  vendorData(){
+    return [
+      {id:1,name:'Sharma Caterers',category:'Catering',phone:'+91 98•••• 4412',quoted:650000,paid:200000,cat:'oklch(0.55 0.13 28)',
+        payments:[{amount:200000,mode:'UPI',type:'Advance',date:'2 May',via:'voice',label:'Advance payment'}]},
+      {id:2,name:'Lensbaba Studios',category:'Photo & Video',quoted:280000,paid:100000,phone:'+91 98•••• 7781',cat:'oklch(0.52 0.12 250)',
+        payments:[{amount:100000,mode:'Bank',type:'Advance',date:'18 Apr',via:'manual',label:'Booking advance'}]},
+      {id:3,name:'Blooms by Riya',category:'Decor & Florals',quoted:320000,paid:150000,phone:'+91 98•••• 3390',cat:'oklch(0.55 0.13 150)',
+        payments:[{amount:100000,mode:'UPI',type:'Advance',date:'20 Apr',via:'chat',label:'Advance'},{amount:50000,mode:'Cash',type:'Advance',date:'2 Jun',via:'manual',label:'Top-up'}]},
+      {id:4,name:'DJ Karan',category:'Music',quoted:90000,paid:0,phone:'+91 98•••• 1102',cat:'oklch(0.52 0.12 300)',payments:[]},
+      {id:5,name:'Glow by Meher',category:'Makeup',quoted:110000,paid:40000,phone:'+91 98•••• 6655',cat:'oklch(0.58 0.12 350)',
+        payments:[{amount:40000,mode:'UPI',type:'Advance',date:'28 Apr',via:'voice',label:'Trial + advance'}]},
+      {id:6,name:'Royal Tentwala',category:'Tenting',quoted:140000,paid:70000,phone:'+91 98•••• 2218',cat:'oklch(0.50 0.10 80)',
+        payments:[{amount:70000,mode:'Cash',type:'Advance',date:'15 Apr',via:'manual',label:'Advance'}]},
+    ];
+  }
+
+  theme(){
+    const dark=this.state.mode==='dark', mar=this.state.accent==='marigold';
+    const accent=mar?'oklch(0.74 0.15 73)':'oklch(0.52 0.14 22)';
+    const A=this.state.dir==='A';
+    const fb=dark?'oklch(0.32 0.012 60)':'oklch(0.91 0.008 80)';
+    const dir = A ? {
+      headFont:"'Marcellus',serif", headWeight:'400', headLs:'0.01em',
+      rad:'18px', radSm:'14px', radBtn:'14px', avatarRad:'12px',
+      cardBorder:'1px solid '+fb, cardShadow:dark?'none':'0 1px 3px rgba(40,34,28,0.06)',
+    } : {
+      headFont:"'Geist',sans-serif", headWeight:'700', headLs:'-0.02em',
+      rad:'10px', radSm:'9px', radBtn:'9px', avatarRad:'7px',
+      cardBorder:(dark?'1px solid oklch(0.34 0.012 60)':'1px solid oklch(0.88 0.008 80)'),
+      cardShadow:'none',
+    };
+    return {
+      ...dir,
+      isDark:dark, accent, accentInk:mar?'#1a1408':'#fdeee8',
+      accentGlow:mar?'oklch(0.74 0.15 73 / 0.30)':'oklch(0.52 0.14 22 / 0.32)',
+      screenBg:dark?'oklch(0.19 0.012 60)':'oklch(0.985 0.008 85)',
+      card:dark?'oklch(0.23 0.012 60)':'oklch(1 0 0)',
+      navBg:dark?'oklch(0.21 0.012 60 / 0.85)':'oklch(1 0 0 / 0.85)',
+      sheetBg:dark?'oklch(0.22 0.012 60)':'oklch(0.99 0.006 85)',
+      voiceScrim:dark?'rgba(0,0,0,0.55)':'rgba(40,34,28,0.4)',
+      ink:dark?'oklch(0.96 0.01 85)':'oklch(0.26 0.012 60)',
+      muted:dark?'oklch(0.72 0.012 70)':'oklch(0.48 0.012 60)',
+      faint:dark?'oklch(0.55 0.012 70)':'oklch(0.62 0.012 60)',
+      field:dark?'oklch(0.25 0.012 60)':'oklch(0.97 0.006 85)',
+      fieldBorder:dark?'oklch(0.32 0.012 60)':'oklch(0.91 0.008 80)',
+      track:dark?'oklch(0.30 0.012 60)':'oklch(0.92 0.008 80)',
+    };
+  }
+
+  btn(a){ return `border:none; cursor:pointer; padding:7px 13px; border-radius:9px; font-family:'Geist',sans-serif; font-size:13px; font-weight:500; ${a?'background:#3a342e; color:#fdf6ee;':'background:transparent; color:#7d756b;'}`; }
+  go(s){ return ()=>this.setState({screen:s}); }
+
+  renderVals(){
+    const t=this.theme(), s=this.state.screen;
+    const vendors=this.vendorData().map(v=>{
+      const pending=v.quoted-v.paid, pct=Math.round(v.paid/v.quoted*100);
+      const initials=v.name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();
+      return {...v, pending, pct, initials, paidStr:this.fmt(v.paid), pendingStr:this.fmt(pending), quotedStr:this.fmt(v.quoted),
+        payments:v.payments.map(p=>({...p, amountStr:this.fmt(p.amount), modeShort:p.mode.slice(0,3).toUpperCase(), label:p.label})),
+        open:()=>this.setState({screen:'vendorDetail', vendorId:v.id})};
+    });
+    const totalPaid=vendors.reduce((a,v)=>a+v.paid,0), totalQuoted=vendors.reduce((a,v)=>a+v.quoted,0);
+    const budget=1800000, pending=totalQuoted-totalPaid;
+    const sv=vendors.find(v=>v.id===this.state.vendorId)||vendors[0];
+
+    const cer=[
+      {name:'Haldi',date:'10 Dec',icon:'🌼'},{name:'Mehendi',date:'11 Dec',icon:'🌿'},
+      {name:'Sangeet',date:'11 Dec',icon:'🎶'},{name:'Wedding',date:'12 Dec',icon:'💍'},{name:'Reception',date:'13 Dec',icon:'✨'},
+    ];
+    const taskDefs={
+      Haldi:[['Confirm haldi paste quantity','Sharma Caterers'],['Marigold backdrop setup','Blooms by Riya']],
+      Sangeet:[['Share song playlist','DJ Karan'],['Stage lighting plan','Royal Tentwala'],['Makeup trial slot','Glow by Meher']],
+      Wedding:[['Final headcount to caterer','Sharma Caterers'],['Mandap floral mockup','Blooms by Riya'],['Photographer shot list','Lensbaba Studios']],
+    };
+    const done=this.state.done;
+    const taskGroups=Object.keys(taskDefs).map(name=>{
+      const icon=cer.find(c=>c.name===name).icon;
+      const tasks=taskDefs[name].map((td,i)=>{
+        const key=name+i, isDone=!!done[key];
+        return {desc:td[0], vendor:td[1], check:isDone?'✓':'',
+          checkBg:isDone?t.accent:'transparent', checkBorder:isDone?t.accent:t.fieldBorder,
+          textColor:isDone?t.faint:t.ink, strike:isDone?'line-through':'none',
+          border:i===0?'none':'1px solid '+t.fieldBorder,
+          toggle:()=>this.setState(st=>({done:{...st.done,[key]:!st.done[key]}}))};
+      });
+      const d=tasks.filter(x=>x.check).length;
+      return {name, icon, tasks, progress:d+'/'+tasks.length};
+    });
+    const ceremonies=cer.map(c=>{
+      const g=taskGroups.find(x=>x.name===c.name);
+      return {...c, taskStr:g?g.progress+' tasks':'· planning'};
+    });
+
+    return {
+      ...t,
+      isLogin:s==='login', isOnboard:s==='onboard', isVoice:s==='voice',
+      isApp:['dashboard','vendors','vendorDetail','tasks','add'].includes(s),
+      isDash:s==='dashboard', isVendors:s==='vendors', isVendorDetail:s==='vendorDetail', isTasks:s==='tasks', isAdd:s==='add',
+      vendors, attention:[...vendors].sort((a,b)=>b.pending-a.pending).slice(0,3), sv,
+      ceremonies, taskGroups,
+      vendorCount:vendors.length, budgetStr:this.fmt(budget), pendingStr:this.fmt(pending),
+      paidStr:this.fmt(totalPaid), committedStr:this.fmt(totalQuoted), paidPct:Math.round(totalPaid/totalQuoted*100),
+      daysToGo:168,
+      categories:['Catering','Photo & Video','Decor','Music','Makeup','Tenting','Priest'],
+      ceremonyChips:cer.map((c,i)=>({name:c.name, bg:i<2?t.accentGlow:t.field, border:i<2?t.accent:t.fieldBorder, color:i<2?t.accent:t.ink})),
+      tabDash:s==='dashboard'?t.accent:t.faint, tabVendors:(s==='vendors'||s==='vendorDetail'||s==='add')?t.accent:t.faint,
+      tabTasks:s==='tasks'?t.accent:t.faint, tabMore:t.faint,
+      dirABtn:this.btn(this.state.dir==='A'), dirBBtn:this.btn(this.state.dir==='B'),
+      dirLabel:this.state.dir==='A'?'Editorial Warm':'Linear Ledger',
+      setDirA:()=>this.setState({dir:'A'}), setDirB:()=>this.setState({dir:'B'}),
+      marigoldBtn:this.btn(this.state.accent==='marigold'), maroonBtn:this.btn(this.state.accent==='maroon'),
+      lightBtn:this.btn(this.state.mode==='light'), darkBtn:this.btn(this.state.mode==='dark'),
+      resetBtn:`border:none;cursor:pointer;padding:7px 11px;border-radius:9px;font-family:'Geist',sans-serif;font-size:13px;background:transparent;color:#7d756b;`,
+      setMarigold:()=>this.setState({accent:'marigold'}), setMaroon:()=>this.setState({accent:'maroon'}),
+      setLight:()=>this.setState({mode:'light'}), setDark:()=>this.setState({mode:'dark'}),
+      goLogin:this.go('login'), goOnboard:this.go('onboard'), goDash:this.go('dashboard'),
+      goVendors:this.go('vendors'), goTasks:this.go('tasks'), goVoice:this.go('voice'), goAdd:this.go('add'),
+    };
+  }
+}
+</script>
+</body>
+</html>
