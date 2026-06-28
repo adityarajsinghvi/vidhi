@@ -1,0 +1,9 @@
+{
+  "name": "Vidhi — the quiet ledger behind every wedding",
+  "short_name": "Vidhi",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#fbf9f6",
+  "theme_color": "#fbf9f6",
+  "icons": []
+}
