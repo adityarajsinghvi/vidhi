@@ -49,6 +49,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${marcellus.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <head>
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}

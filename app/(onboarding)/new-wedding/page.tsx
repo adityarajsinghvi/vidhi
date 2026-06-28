@@ -36,7 +36,7 @@ export default async function NewWeddingPage({
           />
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 min-[420px]:flex-row">
           <div className="flex flex-1 flex-col gap-2">
             <label htmlFor="startDate" className="pl-1 text-[13px] text-muted">
               Starts
@@ -45,7 +45,7 @@ export default async function NewWeddingPage({
               id="startDate"
               name="startDate"
               type="date"
-              className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
+              className="w-full min-w-0 rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
             />
           </div>
           <div className="flex flex-1 flex-col gap-2">
@@ -56,7 +56,7 @@ export default async function NewWeddingPage({
               id="endDate"
               name="endDate"
               type="date"
-              className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
+              className="w-full min-w-0 rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
             />
           </div>
         </div>
