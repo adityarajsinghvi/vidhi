@@ -6,6 +6,7 @@ import { formatRupees } from "@/lib/money";
 import { colorForCategory, initialsFor } from "@/lib/vendor-category";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { SelectField } from "@/components/select-field";
+import { PaymentChatParser } from "./payment-chat-parser";
 import { recordPayment } from "./actions";
 
 export default async function VendorDetailPage({
@@ -109,6 +110,8 @@ export default async function VendorDetailPage({
           <span className="text-lg">💬</span> Message on WhatsApp
         </a>
       )}
+
+      <PaymentChatParser vendorId={vendor.id} />
 
       <div className="mb-2.5 text-[15px] font-semibold text-ink">Record a payment</div>
       <form

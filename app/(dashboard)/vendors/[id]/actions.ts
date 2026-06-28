@@ -11,6 +11,7 @@ const paymentSchema = z.object({
   mode: z.enum(["cash", "upi", "bank"], { message: "Pick a payment mode" }),
   type: z.enum(["advance", "balance"], { message: "Pick a payment type" }),
   notes: z.string().optional(),
+  createdVia: z.enum(["manual", "voice", "chat_paste"]).default("manual"),
 });
 
 export async function recordPayment(formData: FormData) {
@@ -21,6 +22,7 @@ export async function recordPayment(formData: FormData) {
     mode: formData.get("mode"),
     type: formData.get("type"),
     notes: formData.get("notes") || undefined,
+    createdVia: formData.get("createdVia") || undefined,
   });
 
   if (!parsed.success) {
@@ -36,6 +38,7 @@ export async function recordPayment(formData: FormData) {
     mode: parsed.data.mode,
     type: parsed.data.type,
     notes: parsed.data.notes || null,
+    created_via: parsed.data.createdVia,
   });
 
   if (error) {
