@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
+import { SelectField } from "@/components/select-field";
 import { createTask, toggleTask } from "./actions";
 
 export default async function TasksPage({
@@ -66,13 +67,8 @@ export default async function TasksPage({
           className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-base text-ink outline-none placeholder:text-faint"
         />
 
-        <div className="flex gap-2.5">
-          <select
-            name="ceremonyId"
-            required
-            defaultValue=""
-            className="flex-1 rounded-btn border border-field-border bg-field px-3.5 py-3.5 text-sm text-ink outline-none"
-          >
+        <div className="flex flex-col gap-2.5 min-[420px]:flex-row">
+          <SelectField name="ceremonyId" required defaultValue="" className="flex-1">
             <option value="" disabled>
               Ceremony
             </option>
@@ -81,19 +77,15 @@ export default async function TasksPage({
                 {c.name}
               </option>
             ))}
-          </select>
-          <select
-            name="vendorId"
-            defaultValue=""
-            className="flex-1 rounded-btn border border-field-border bg-field px-3.5 py-3.5 text-sm text-ink outline-none"
-          >
+          </SelectField>
+          <SelectField name="vendorId" defaultValue="" className="flex-1">
             <option value="">No vendor</option>
             {(vendors ?? []).map((v) => (
               <option key={v.id} value={v.id}>
                 {v.name}
               </option>
             ))}
-          </select>
+          </SelectField>
         </div>
 
         <input

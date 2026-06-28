@@ -5,6 +5,7 @@ import { requireWedding } from "@/lib/weddings";
 import { formatRupees } from "@/lib/money";
 import { colorForCategory, initialsFor } from "@/lib/vendor-category";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { SelectField } from "@/components/select-field";
 import { recordPayment } from "./actions";
 
 export default async function VendorDetailPage({
@@ -132,31 +133,21 @@ export default async function VendorDetailPage({
         </div>
 
         <div className="flex gap-2.5">
-          <select
-            name="mode"
-            required
-            defaultValue=""
-            className="flex-1 rounded-btn border border-field-border bg-field px-3.5 py-3.5 text-sm text-ink outline-none"
-          >
+          <SelectField name="mode" required defaultValue="" className="flex-1">
             <option value="" disabled>
               Mode
             </option>
             <option value="cash">Cash</option>
             <option value="upi">UPI</option>
             <option value="bank">Bank</option>
-          </select>
-          <select
-            name="type"
-            required
-            defaultValue=""
-            className="flex-1 rounded-btn border border-field-border bg-field px-3.5 py-3.5 text-sm text-ink outline-none"
-          >
+          </SelectField>
+          <SelectField name="type" required defaultValue="" className="flex-1">
             <option value="" disabled>
               Type
             </option>
             <option value="advance">Advance</option>
             <option value="balance">Balance</option>
-          </select>
+          </SelectField>
         </div>
 
         <input

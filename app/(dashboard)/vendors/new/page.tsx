@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
 import { VENDOR_CATEGORIES } from "@/lib/vendor-category";
+import { SelectField } from "@/components/select-field";
 import { createVendor } from "./actions";
 
 export default async function NewVendorPage({
@@ -49,13 +50,7 @@ export default async function NewVendorPage({
           <label htmlFor="category" className="pl-1 text-[13px] text-muted">
             Category
           </label>
-          <select
-            id="category"
-            name="category"
-            required
-            defaultValue=""
-            className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-base text-ink outline-none"
-          >
+          <SelectField id="category" name="category" required defaultValue="">
             <option value="" disabled>
               Choose a category
             </option>
@@ -64,7 +59,7 @@ export default async function NewVendorPage({
                 {c}
               </option>
             ))}
-          </select>
+          </SelectField>
         </div>
 
         <div className="flex flex-col gap-2">
