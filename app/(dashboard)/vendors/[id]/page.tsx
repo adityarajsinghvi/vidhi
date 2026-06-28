@@ -5,13 +5,17 @@ import { requireWedding } from "@/lib/weddings";
 import { formatRupees } from "@/lib/money";
 import { colorForCategory, initialsFor } from "@/lib/vendor-category";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { recordPayment } from "./actions";
 
 export default async function VendorDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ error?: string }>;
 }) {
   const { id } = await params;
+  const { error } = await searchParams;
   const wedding = await requireWedding();
   const supabase = await createClient();
 
@@ -104,6 +108,73 @@ export default async function VendorDetailPage({
           <span className="text-lg">💬</span> Message on WhatsApp
         </a>
       )}
+
+      <div className="mb-2.5 text-[15px] font-semibold text-ink">Record a payment</div>
+      <form
+        action={recordPayment}
+        className="mb-[18px] flex flex-col gap-3 rounded-card border border-field-border bg-card p-3.5 shadow-card"
+      >
+        <input type="hidden" name="vendorId" value={vendor.id} />
+
+        <div className="flex items-center gap-2.5 rounded-btn border border-field-border bg-field px-4 py-3.5">
+          <span className="font-mono text-base text-ink">₹</span>
+          <span className="h-5 w-px bg-field-border" />
+          <input
+            name="amount"
+            type="number"
+            min="0"
+            step="1"
+            inputMode="numeric"
+            required
+            placeholder="Amount"
+            className="w-full bg-transparent font-mono text-base text-ink outline-none placeholder:text-faint"
+          />
+        </div>
+
+        <div className="flex gap-2.5">
+          <select
+            name="mode"
+            required
+            defaultValue=""
+            className="flex-1 rounded-btn border border-field-border bg-field px-3.5 py-3.5 text-sm text-ink outline-none"
+          >
+            <option value="" disabled>
+              Mode
+            </option>
+            <option value="cash">Cash</option>
+            <option value="upi">UPI</option>
+            <option value="bank">Bank</option>
+          </select>
+          <select
+            name="type"
+            required
+            defaultValue=""
+            className="flex-1 rounded-btn border border-field-border bg-field px-3.5 py-3.5 text-sm text-ink outline-none"
+          >
+            <option value="" disabled>
+              Type
+            </option>
+            <option value="advance">Advance</option>
+            <option value="balance">Balance</option>
+          </select>
+        </div>
+
+        <input
+          name="notes"
+          type="text"
+          placeholder="Notes (optional)"
+          className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-base text-ink outline-none placeholder:text-faint"
+        />
+
+        {error && <p className="text-sm text-red-500">{error}</p>}
+
+        <button
+          type="submit"
+          className="rounded-btn bg-accent px-4 py-3.5 text-sm font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
+        >
+          Save payment
+        </button>
+      </form>
 
       <div className="mb-2.5 text-[15px] font-semibold text-ink">Payment history</div>
       <div className="flex flex-col gap-2.5">
