@@ -1,8 +1,10 @@
 "use server";
 
 import { z } from "zod";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { ACTIVE_WEDDING_COOKIE } from "@/lib/weddings";
 
 const weddingSchema = z.object({
   coupleNames: z.string().trim().min(1, "Enter the couple's names"),
@@ -34,17 +36,36 @@ export async function createWedding(formData: FormData) {
 
   const { coupleNames, startDate, endDate, budgetTotal } = parsed.data;
 
-  const { error } = await supabase.from("weddings").insert({
-    owner_user_id: userId,
-    couple_names: coupleNames,
-    start_date: startDate || null,
-    end_date: endDate || null,
-    budget_total: budgetTotal ? Number(budgetTotal) : 0,
-  });
+  const { count: existingCount } = await supabase
+    .from("weddings")
+    .select("id", { count: "exact", head: true })
+    .eq("owner_user_id", userId);
 
-  if (error) {
-    redirect(`/new-wedding?error=${encodeURIComponent(error.message)}`);
+  const { data: wedding, error } = await supabase
+    .from("weddings")
+    .insert({
+      owner_user_id: userId,
+      couple_names: coupleNames,
+      start_date: startDate || null,
+      end_date: endDate || null,
+      budget_total: budgetTotal ? Number(budgetTotal) : 0,
+    })
+    .select("id")
+    .single();
+
+  if (error || !wedding) {
+    redirect(`/new-wedding?error=${encodeURIComponent(error?.message ?? "Could not save wedding")}`);
   }
 
-  redirect("/add-to-home-screen");
+  const cookieStore = await cookies();
+  cookieStore.set(ACTIVE_WEDDING_COOKIE, wedding.id, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 365,
+    path: "/",
+  });
+
+  const isFirstWedding = !existingCount || existingCount === 0;
+  redirect(isFirstWedding ? "/add-to-home-screen" : "/dashboard");
 }

@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 import { OnboardingProgress } from "@/components/onboarding-progress";
 import { createWedding } from "./actions";
 
@@ -8,13 +10,35 @@ export default async function NewWeddingPage({
 }) {
   const { error } = await searchParams;
 
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
+  const { count } = userData.user
+    ? await supabase
+        .from("weddings")
+        .select("id", { count: "exact", head: true })
+        .eq("owner_user_id", userData.user.id)
+    : { count: 0 };
+  const isFirstWedding = !count || count === 0;
+
   return (
     <>
-      <OnboardingProgress step={1} />
+      {isFirstWedding ? (
+        <OnboardingProgress step={1} />
+      ) : (
+        <Link href="/more" className="mb-5 inline-block text-lg text-muted">
+          ←
+        </Link>
+      )}
       <h1 className="mb-2 font-display text-[28px] leading-tight tracking-[0.01em] text-ink">
-        Let&apos;s set up your
-        <br />
-        first wedding
+        {isFirstWedding ? (
+          <>
+            Let&apos;s set up your
+            <br />
+            first wedding
+          </>
+        ) : (
+          "Add a wedding"
+        )}
       </h1>
       <p className="mb-7 text-sm leading-relaxed text-muted">
         Add the couple&apos;s names and budget — you can add ceremonies and

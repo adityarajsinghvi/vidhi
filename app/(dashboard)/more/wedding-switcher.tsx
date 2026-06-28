@@ -1,0 +1,50 @@
+import Link from "next/link";
+import { listWeddings, requireWedding } from "@/lib/weddings";
+import { switchWedding } from "./wedding-actions";
+
+export async function WeddingSwitcher() {
+  const [weddings, active] = await Promise.all([listWeddings(), requireWedding()]);
+
+  return (
+    <div className="flex flex-col gap-2.5">
+      {weddings.map((w) => {
+        const isActive = w.id === active.id;
+        return (
+          <form key={w.id} action={switchWedding}>
+            <input type="hidden" name="weddingId" value={w.id} />
+            <button
+              type="submit"
+              disabled={isActive}
+              className={`flex w-full items-center justify-between rounded-card border p-3.5 text-left ${
+                isActive
+                  ? "border-accent bg-accent-glow"
+                  : "border-field-border bg-field"
+              }`}
+            >
+              <div>
+                <div className="text-sm font-semibold text-ink">{w.couple_names}</div>
+                {w.start_date && (
+                  <div className="mt-0.5 text-xs text-muted">
+                    {new Date(w.start_date).toLocaleDateString("en-IN", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </div>
+                )}
+              </div>
+              {isActive && <span className="text-xs font-medium text-accent">Active</span>}
+            </button>
+          </form>
+        );
+      })}
+
+      <Link
+        href="/new-wedding"
+        className="flex items-center justify-center gap-1.5 rounded-card border border-dashed border-field-border py-3.5 text-sm font-medium text-accent"
+      >
+        <span className="text-lg">＋</span> Add another wedding
+      </Link>
+    </div>
+  );
+}

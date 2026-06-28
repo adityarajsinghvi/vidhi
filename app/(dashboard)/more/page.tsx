@@ -1,6 +1,7 @@
 import { NotificationToggle } from "./notification-toggle";
 import { ShareLink } from "./share-link";
 import { RemindersList } from "./reminders-list";
+import { WeddingSwitcher } from "./wedding-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function MorePage() {
@@ -8,6 +9,11 @@ export default function MorePage() {
     <div className="px-5 pt-[60px]">
       <div className="mb-5 font-display text-[26px] leading-tight tracking-[0.01em] text-ink">
         More
+      </div>
+
+      <div className="mb-2.5 text-[15px] font-semibold text-ink">Weddings</div>
+      <div className="mb-[22px]">
+        <WeddingSwitcher />
       </div>
 
       <div className="mb-2.5 text-[15px] font-semibold text-ink">Appearance</div>
