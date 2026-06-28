@@ -47,19 +47,13 @@ export default async function NewVendorPage({
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="category" className="pl-1 text-[13px] text-muted">
-            Category
-          </label>
-          <SelectField id="category" name="category" required defaultValue="">
-            <option value="" disabled>
-              Choose a category
-            </option>
-            {VENDOR_CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </SelectField>
+          <label className="pl-1 text-[13px] text-muted">Category</label>
+          <SelectField
+            name="category"
+            required
+            placeholder="Choose a category"
+            options={VENDOR_CATEGORIES.map((c) => ({ value: c, label: c }))}
+          />
         </div>
 
         <div className="flex flex-col gap-2">

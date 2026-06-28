@@ -136,21 +136,27 @@ export default async function VendorDetailPage({
         </div>
 
         <div className="flex gap-2.5">
-          <SelectField name="mode" required defaultValue="" className="flex-1">
-            <option value="" disabled>
-              Mode
-            </option>
-            <option value="cash">Cash</option>
-            <option value="upi">UPI</option>
-            <option value="bank">Bank</option>
-          </SelectField>
-          <SelectField name="type" required defaultValue="" className="flex-1">
-            <option value="" disabled>
-              Type
-            </option>
-            <option value="advance">Advance</option>
-            <option value="balance">Balance</option>
-          </SelectField>
+          <SelectField
+            name="mode"
+            required
+            placeholder="Mode"
+            className="flex-1"
+            options={[
+              { value: "cash", label: "Cash" },
+              { value: "upi", label: "UPI" },
+              { value: "bank", label: "Bank" },
+            ]}
+          />
+          <SelectField
+            name="type"
+            required
+            placeholder="Type"
+            className="flex-1"
+            options={[
+              { value: "advance", label: "Advance" },
+              { value: "balance", label: "Balance" },
+            ]}
+          />
         </div>
 
         <input

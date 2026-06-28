@@ -68,24 +68,19 @@ export default async function TasksPage({
         />
 
         <div className="flex flex-col gap-2.5 min-[420px]:flex-row">
-          <SelectField name="ceremonyId" required defaultValue="" className="flex-1">
-            <option value="" disabled>
-              Ceremony
-            </option>
-            {(ceremonies ?? []).map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </SelectField>
-          <SelectField name="vendorId" defaultValue="" className="flex-1">
-            <option value="">No vendor</option>
-            {(vendors ?? []).map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
-              </option>
-            ))}
-          </SelectField>
+          <SelectField
+            name="ceremonyId"
+            required
+            placeholder="Ceremony"
+            className="flex-1"
+            options={(ceremonies ?? []).map((c) => ({ value: c.id, label: c.name }))}
+          />
+          <SelectField
+            name="vendorId"
+            placeholder="No vendor"
+            className="flex-1"
+            options={(vendors ?? []).map((v) => ({ value: v.id, label: v.name }))}
+          />
         </div>
 
         <input
