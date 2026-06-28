@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { OnboardingProgress } from "@/components/onboarding-progress";
+import { InstallButton } from "./install-button";
 
 export default function AddToHomeScreenPage() {
   return (
@@ -14,6 +15,8 @@ export default function AddToHomeScreenPage() {
         Reminders only reach your lock screen once Vidhi lives on your home
         screen. Takes 10 seconds.
       </p>
+
+      <InstallButton />
 
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3 rounded-btn border border-field-border bg-field px-4 py-3.5">
