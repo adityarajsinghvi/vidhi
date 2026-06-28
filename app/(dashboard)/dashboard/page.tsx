@@ -102,8 +102,9 @@ export default async function DashboardPage() {
       </div>
       <div className="-mx-5 mb-[22px] flex gap-2.5 overflow-x-auto px-5">
         {(ceremonies ?? []).map((c) => (
-          <div
+          <Link
             key={c.id}
+            href={`/ceremonies/${c.id}/edit`}
             className="w-[124px] flex-shrink-0 rounded-card border border-field-border bg-card p-3.5 shadow-card"
           >
             <div className="mb-2.5 flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-accent-glow text-[13px] font-semibold text-accent">
@@ -118,7 +119,7 @@ export default async function DashboardPage() {
                   })
                 : "No date yet"}
             </div>
-          </div>
+          </Link>
         ))}
         <Link
           href="/ceremonies/new"

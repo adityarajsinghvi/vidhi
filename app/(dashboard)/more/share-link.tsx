@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { getOrCreateShareToken } from "./share-actions";
+import { getOrCreateShareToken, revokeShareToken } from "./share-actions";
 
 export function ShareLink() {
   const [url, setUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [revoking, setRevoking] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function getLink() {
@@ -28,6 +29,21 @@ export function ShareLink() {
     await navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
+  }
+
+  async function revoke() {
+    if (!confirm("Revoke this link? It will stop working immediately.")) return;
+    setRevoking(true);
+    setError(null);
+    try {
+      const result = await revokeShareToken();
+      if (!result.success) throw new Error(result.error);
+      setUrl(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't revoke the link");
+    } finally {
+      setRevoking(false);
+    }
   }
 
   if (!url) {
@@ -58,6 +74,15 @@ export function ShareLink() {
       >
         {copied ? "Copied!" : "Copy link"}
       </button>
+      <button
+        type="button"
+        onClick={revoke}
+        disabled={revoking}
+        className="rounded-btn px-4 py-2 text-sm font-medium text-red-500 disabled:opacity-50"
+      >
+        {revoking ? "Revoking…" : "Revoke link"}
+      </button>
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

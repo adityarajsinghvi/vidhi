@@ -1,5 +1,6 @@
 import { NotificationToggle } from "./notification-toggle";
 import { ShareLink } from "./share-link";
+import { RemindersList } from "./reminders-list";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function MorePage() {
@@ -20,6 +21,11 @@ export default function MorePage() {
           Get a push notification when a scheduled vendor reminder is due.
         </p>
         <NotificationToggle />
+      </div>
+
+      <div className="mb-2.5 text-[15px] font-semibold text-ink">Scheduled reminders</div>
+      <div className="mb-[22px]">
+        <RemindersList />
       </div>
 
       <div className="mb-2.5 text-[15px] font-semibold text-ink">Share with the couple</div>

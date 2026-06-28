@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
 import { SelectField } from "@/components/select-field";
 import { createTask, toggleTask } from "./actions";
+import { DeleteTaskButton } from "./delete-task-button";
 
 export default async function TasksPage({
   searchParams,
@@ -108,42 +109,44 @@ export default async function TasksPage({
             <div className="mb-2.5 text-[15px] font-semibold text-ink">{ceremony.name}</div>
             <div className="flex flex-col gap-2.5">
               {ceremonyTasks.map((t) => (
-                <form
+                <div
                   key={t.id}
-                  action={toggleTask}
                   className="flex items-center gap-3 rounded-card border border-field-border bg-card p-3.5 shadow-card"
                 >
-                  <input type="hidden" name="taskId" value={t.id} />
-                  <input type="hidden" name="nextDone" value={String(!t.done)} />
-                  <button
-                    type="submit"
-                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs ${
-                      t.done
-                        ? "border-accent bg-accent text-accent-ink"
-                        : "border-field-border bg-field text-transparent"
-                    }`}
-                  >
-                    ✓
-                  </button>
-                  <div className="min-w-0 flex-1">
-                    <div
-                      className={`text-sm font-medium ${t.done ? "text-muted line-through" : "text-ink"}`}
+                  <form action={toggleTask} className="flex items-center gap-3 flex-1 min-w-0">
+                    <input type="hidden" name="taskId" value={t.id} />
+                    <input type="hidden" name="nextDone" value={String(!t.done)} />
+                    <button
+                      type="submit"
+                      className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border text-xs ${
+                        t.done
+                          ? "border-accent bg-accent text-accent-ink"
+                          : "border-field-border bg-field text-transparent"
+                      }`}
                     >
-                      {t.description}
+                      ✓
+                    </button>
+                    <div className="min-w-0 flex-1">
+                      <div
+                        className={`text-sm font-medium ${t.done ? "text-muted line-through" : "text-ink"}`}
+                      >
+                        {t.description}
+                      </div>
+                      <div className="text-xs text-muted">
+                        {t.vendor_id && vendorNameById.get(t.vendor_id)}
+                        {t.vendor_id && t.due_at && " · "}
+                        {t.due_at &&
+                          new Date(t.due_at).toLocaleString("en-IN", {
+                            day: "numeric",
+                            month: "short",
+                            hour: "numeric",
+                            minute: "2-digit",
+                          })}
+                      </div>
                     </div>
-                    <div className="text-xs text-muted">
-                      {t.vendor_id && vendorNameById.get(t.vendor_id)}
-                      {t.vendor_id && t.due_at && " · "}
-                      {t.due_at &&
-                        new Date(t.due_at).toLocaleString("en-IN", {
-                          day: "numeric",
-                          month: "short",
-                          hour: "numeric",
-                          minute: "2-digit",
-                        })}
-                    </div>
-                  </div>
-                </form>
+                  </form>
+                  <DeleteTaskButton taskId={t.id} />
+                </div>
               ))}
             </div>
           </div>

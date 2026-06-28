@@ -64,9 +64,12 @@ export default async function VendorDetailPage({
         <Link href="/vendors" className="text-lg text-muted">
           ←
         </Link>
-        <div className="font-display text-[22px] leading-tight tracking-[0.01em] text-ink">
+        <div className="flex-1 font-display text-[22px] leading-tight tracking-[0.01em] text-ink">
           Vendor
         </div>
+        <Link href={`/vendors/${vendor.id}/edit`} className="text-sm font-medium text-accent">
+          Edit
+        </Link>
       </div>
 
       <div className="mb-[18px] flex items-center gap-3.5">

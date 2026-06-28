@@ -50,3 +50,71 @@ export async function recordPayment(formData: FormData) {
   revalidatePath("/dashboard");
   redirect(`/vendors/${vendorId}`);
 }
+
+const vendorEditSchema = z.object({
+  vendorId: z.string().uuid(),
+  name: z.string().trim().min(1, "Enter the vendor's name"),
+  category: z.string().trim().min(1, "Pick a category"),
+  phone: z.string().optional(),
+  quotedAmount: z.string().optional(),
+});
+
+export async function updateVendor(formData: FormData) {
+  const vendorId = String(formData.get("vendorId"));
+  const parsed = vendorEditSchema.safeParse({
+    vendorId,
+    name: formData.get("name"),
+    category: formData.get("category"),
+    phone: formData.get("phone") || undefined,
+    quotedAmount: formData.get("quotedAmount") || undefined,
+  });
+
+  if (!parsed.success) {
+    redirect(
+      `/vendors/${vendorId}/edit?error=${encodeURIComponent(parsed.error.issues[0].message)}`,
+    );
+  }
+
+  const ceremonyIds = formData.getAll("ceremonyIds").map(String);
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("vendors")
+    .update({
+      name: parsed.data.name,
+      category: parsed.data.category,
+      phone: parsed.data.phone || null,
+      quoted_amount: parsed.data.quotedAmount ? Number(parsed.data.quotedAmount) : 0,
+    })
+    .eq("id", parsed.data.vendorId);
+
+  if (error) {
+    redirect(`/vendors/${vendorId}/edit?error=${encodeURIComponent(error.message)}`);
+  }
+
+  await supabase.from("vendor_ceremony").delete().eq("vendor_id", parsed.data.vendorId);
+  if (ceremonyIds.length > 0) {
+    await supabase
+      .from("vendor_ceremony")
+      .insert(ceremonyIds.map((ceremonyId) => ({ vendor_id: parsed.data.vendorId, ceremony_id: ceremonyId })));
+  }
+
+  revalidatePath(`/vendors/${vendorId}`);
+  revalidatePath("/vendors");
+  revalidatePath("/dashboard");
+  redirect(`/vendors/${vendorId}`);
+}
+
+export async function deleteVendor(formData: FormData) {
+  const vendorId = String(formData.get("vendorId"));
+  const supabase = await createClient();
+
+  const { error } = await supabase.from("vendors").delete().eq("id", vendorId);
+  if (error) {
+    redirect(`/vendors/${vendorId}/edit?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/vendors");
+  revalidatePath("/dashboard");
+  redirect("/vendors");
+}

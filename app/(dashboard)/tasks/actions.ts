@@ -49,3 +49,12 @@ export async function toggleTask(formData: FormData) {
 
   revalidatePath("/tasks");
 }
+
+export async function deleteTask(formData: FormData) {
+  const taskId = String(formData.get("taskId"));
+
+  const supabase = await createClient();
+  await supabase.from("tasks").delete().eq("id", taskId);
+
+  revalidatePath("/tasks");
+}
