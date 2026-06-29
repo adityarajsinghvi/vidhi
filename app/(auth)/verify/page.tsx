@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { verifyOtp, resendOtp } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function VerifyPage({
   searchParams,
@@ -42,21 +43,21 @@ export default async function VerifyPage({
         </div>
         {error && <p className="text-sm text-red-500">{error}</p>}
         {sent && !error && <p className="text-sm text-muted">New code sent.</p>}
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Verifying…"
           className="rounded-btn bg-accent px-4 py-4 text-base font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Verify &amp; continue
-        </button>
+        </SubmitButton>
       </form>
 
       <form action={resendOtp} className="text-center">
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Resending…"
           className="text-xs text-faint underline-offset-2 hover:underline"
         >
           Didn&apos;t get a code? Resend
-        </button>
+        </SubmitButton>
       </form>
     </div>
   );

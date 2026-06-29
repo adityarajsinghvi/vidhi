@@ -3,6 +3,7 @@ import { requireWedding } from "@/lib/weddings";
 import { SelectField } from "@/components/select-field";
 import { createTask, toggleTask } from "./actions";
 import { DeleteTaskButton } from "./delete-task-button";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function TasksPage({
   searchParams,
@@ -92,12 +93,12 @@ export default async function TasksPage({
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Adding…"
           className="rounded-btn bg-accent px-4 py-3.5 text-sm font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Add task
-        </button>
+        </SubmitButton>
       </form>
 
       {(ceremonies ?? []).map((ceremony) => {

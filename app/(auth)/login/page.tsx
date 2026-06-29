@@ -1,4 +1,5 @@
 import { requestOtp } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function LoginPage({
   searchParams,
@@ -49,12 +50,12 @@ export default async function LoginPage({
           </div>
         </div>
         {error && <p className="text-sm text-red-500">{error}</p>}
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Sending…"
           className="rounded-btn bg-accent px-4 py-4 text-base font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Send OTP
-        </button>
+        </SubmitButton>
         <p className="mt-0.5 text-center text-xs text-faint">
           Phone OTP only — no passwords, no email.
         </p>

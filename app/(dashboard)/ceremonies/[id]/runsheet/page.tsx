@@ -5,6 +5,7 @@ import { requireWedding } from "@/lib/weddings";
 import { can } from "@/lib/permissions";
 import { createRunSheetItem, toggleRunSheetItem } from "./actions";
 import { DeleteItemButton } from "./delete-item-button";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function RunSheetPage({
   params,
@@ -84,12 +85,12 @@ export default async function RunSheetPage({
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Adding…"
           className="rounded-btn bg-accent px-4 py-3.5 text-sm font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Add to run sheet
-        </button>
+        </SubmitButton>
       </form>
 
       <div className="flex flex-col gap-2.5">

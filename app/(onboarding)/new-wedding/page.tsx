@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { OnboardingProgress } from "@/components/onboarding-progress";
 import { createWedding } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function NewWeddingPage({
   searchParams,
@@ -107,12 +108,12 @@ export default async function NewWeddingPage({
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Creating…"
           className="mt-2 rounded-btn bg-accent px-4 py-4 text-base font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Create wedding
-        </button>
+        </SubmitButton>
       </form>
     </>
   );

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { requireWedding } from "@/lib/weddings";
 import { can } from "@/lib/permissions";
 import { createCeremony } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function NewCeremonyPage({
   searchParams,
@@ -94,12 +95,12 @@ export default async function NewCeremonyPage({
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Saving…"
           className="mt-2 rounded-btn bg-accent px-4 py-4 text-base font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Save ceremony
-        </button>
+        </SubmitButton>
       </form>
     </div>
   );

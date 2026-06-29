@@ -5,6 +5,7 @@ import { can } from "@/lib/permissions";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { createContact } from "./actions";
 import { DeleteContactButton } from "./delete-contact-button";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function ContactsPage({
   searchParams,
@@ -73,12 +74,12 @@ export default async function ContactsPage({
 
           {error && <p className="text-sm text-red-500">{error}</p>}
 
-          <button
-            type="submit"
+          <SubmitButton
+            pendingLabel="Adding…"
             className="rounded-btn bg-accent px-4 py-3.5 text-sm font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
           >
             Add contact
-          </button>
+          </SubmitButton>
         </form>
       )}
 
@@ -102,6 +103,15 @@ export default async function ContactsPage({
                 </div>
                 {c.notes && <div className="mt-0.5 text-xs text-faint">{c.notes}</div>}
               </div>
+              {c.phone && (
+                <a
+                  href={`tel:${c.phone.replace(/\s+/g, "")}`}
+                  className="flex-shrink-0 text-lg"
+                  title="Call"
+                >
+                  📞
+                </a>
+              )}
               {waLink && (
                 <a
                   href={waLink}

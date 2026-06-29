@@ -6,6 +6,7 @@ import { can } from "@/lib/permissions";
 import { formatRupees } from "@/lib/money";
 import { VENDOR_CATEGORIES } from "@/lib/vendor-category";
 import { setCategoryBudget } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function BudgetPage({
   searchParams,
@@ -122,12 +123,12 @@ export default async function BudgetPage({
                     className="w-full bg-transparent font-mono text-sm text-ink outline-none placeholder:text-faint"
                   />
                 </div>
-                <button
-                  type="submit"
+                <SubmitButton
+                  pendingLabel="Saving…"
                   className="rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-xs font-semibold text-ink"
                 >
                   Save
-                </button>
+                </SubmitButton>
               </form>
             </div>
           );

@@ -7,6 +7,7 @@ import { VENDOR_CATEGORIES } from "@/lib/vendor-category";
 import { SelectField } from "@/components/select-field";
 import { DeleteVendorButton } from "./delete-vendor-button";
 import { updateVendor } from "../actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function EditVendorPage({
   params,
@@ -158,12 +159,12 @@ export default async function EditVendorPage({
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Saving…"
           className="mt-2 rounded-btn bg-accent px-4 py-4 text-base font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Save changes
-        </button>
+        </SubmitButton>
       </form>
 
       <DeleteVendorButton vendorId={vendor.id} vendorName={vendor.name} />

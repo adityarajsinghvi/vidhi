@@ -10,6 +10,7 @@ import { SelectField } from "@/components/select-field";
 import { PaymentChatParser } from "./payment-chat-parser";
 import { recordPayment } from "./actions";
 import { addVendorQuote, useVendorQuote, deleteVendorQuote } from "./quote-actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function VendorDetailPage({
   params,
@@ -119,15 +120,25 @@ export default async function VendorDetailPage({
         </div>
       )}
 
-      {waLink && (
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mb-[18px] flex items-center justify-center gap-2 rounded-btn border border-field-border bg-card px-4 py-3.5 text-sm font-semibold text-ink shadow-card"
-        >
-          <span className="text-lg">💬</span> Message on WhatsApp
-        </a>
+      {vendor.phone && (
+        <div className="mb-[18px] flex gap-2.5">
+          <a
+            href={`tel:${vendor.phone.replace(/\s+/g, "")}`}
+            className="flex flex-1 items-center justify-center gap-2 rounded-btn border border-field-border bg-card px-4 py-3.5 text-sm font-semibold text-ink shadow-card"
+          >
+            <span className="text-lg">📞</span> Call
+          </a>
+          {waLink && (
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-1 items-center justify-center gap-2 rounded-btn border border-field-border bg-card px-4 py-3.5 text-sm font-semibold text-ink shadow-card"
+            >
+              <span className="text-lg">💬</span> WhatsApp
+            </a>
+          )}
+        </div>
       )}
 
       {viewMoney && (
@@ -201,12 +212,12 @@ export default async function VendorDetailPage({
                   placeholder="Notes"
                   className="min-w-0 flex-1 rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-faint"
                 />
-                <button
-                  type="submit"
+                <SubmitButton
+                  pendingLabel="Adding…"
                   className="rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-xs font-semibold text-ink"
                 >
                   Add quote
-                </button>
+                </SubmitButton>
               </div>
             </form>
           </div>
@@ -268,12 +279,12 @@ export default async function VendorDetailPage({
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Saving…"
           className="rounded-btn bg-accent px-4 py-3.5 text-sm font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Save payment
-        </button>
+        </SubmitButton>
       </form>
 
       <div className="mb-2.5 text-[15px] font-semibold text-ink">Payment history</div>

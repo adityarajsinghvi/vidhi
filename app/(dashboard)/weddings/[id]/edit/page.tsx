@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { updateWedding } from "../actions";
+import { SubmitButton } from "@/components/submit-button";
 import { DeleteWeddingButton } from "./delete-wedding-button";
 
 export default async function EditWeddingPage({
@@ -104,12 +105,12 @@ export default async function EditWeddingPage({
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Saving…"
           className="mt-2 rounded-btn bg-accent px-4 py-4 text-base font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Save changes
-        </button>
+        </SubmitButton>
       </form>
 
       <DeleteWeddingButton weddingId={wedding.id} coupleNames={wedding.couple_names} />

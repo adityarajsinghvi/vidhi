@@ -6,6 +6,7 @@ import { can } from "@/lib/permissions";
 import { VENDOR_CATEGORIES } from "@/lib/vendor-category";
 import { SelectField } from "@/components/select-field";
 import { createVendor } from "./actions";
+import { SubmitButton } from "@/components/submit-button";
 
 export default async function NewVendorPage({
   searchParams,
@@ -113,12 +114,12 @@ export default async function NewVendorPage({
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Saving…"
           className="mt-2 rounded-btn bg-accent px-4 py-4 text-base font-semibold text-accent-ink shadow-[0_10px_24px_var(--color-accent-glow)]"
         >
           Save vendor
-        </button>
+        </SubmitButton>
       </form>
     </div>
   );
