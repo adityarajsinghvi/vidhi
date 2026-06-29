@@ -8,7 +8,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-40 flex items-start gap-0 border-t border-field-border bg-nav px-4 pt-2.5 backdrop-blur-xl">
+    <div className="fixed inset-x-0 bottom-0 z-40 flex items-start gap-0 border-t border-field-border bg-nav px-4 pt-2.5 backdrop-blur-xl">
       <NavTab href="/dashboard" label="Home" icon="▦" active={pathname === "/dashboard"} />
       <NavTab href="/vendors" label="Vendors" icon="☷" active={pathname.startsWith("/vendors")} />
       <div className="flex flex-1 justify-center">
