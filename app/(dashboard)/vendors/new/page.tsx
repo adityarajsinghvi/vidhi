@@ -7,6 +7,7 @@ import { VENDOR_CATEGORIES } from "@/lib/vendor-category";
 import { SelectField } from "@/components/select-field";
 import { createVendor } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { SelectAllCheckboxes } from "@/components/select-all-checkboxes";
 
 export default async function NewVendorPage({
   searchParams,
@@ -99,6 +100,7 @@ export default async function NewVendorPage({
           <div className="flex flex-col gap-2">
             <span className="pl-1 text-[13px] text-muted">Ceremonies</span>
             <div className="flex flex-wrap gap-2">
+              <SelectAllCheckboxes name="ceremonyIds" />
               {(ceremonies ?? []).map((c) => (
                 <label
                   key={c.id}

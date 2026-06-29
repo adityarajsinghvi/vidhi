@@ -5,8 +5,7 @@ import { requireWedding } from "@/lib/weddings";
 import { can } from "@/lib/permissions";
 import { formatRupees } from "@/lib/money";
 import { VENDOR_CATEGORIES } from "@/lib/vendor-category";
-import { setCategoryBudget } from "./actions";
-import { SubmitButton } from "@/components/submit-button";
+import { BudgetAllocationForm } from "./budget-allocation-form";
 
 export default async function BudgetPage({
   searchParams,
@@ -90,50 +89,35 @@ export default async function BudgetPage({
 
       {error && <p className="mb-3 text-sm text-red-500">{error}</p>}
 
-      <div className="flex flex-col gap-2.5">
+      <div className="mb-[18px] flex flex-col gap-2">
         {rows.map((r) => {
           const overCommitted = r.allocated > 0 && r.committed > r.allocated;
           return (
             <div
               key={r.name}
-              className="rounded-card border border-field-border bg-card p-3.5 shadow-card"
+              className="flex items-center justify-between gap-3 rounded-card border border-field-border bg-card p-3.5 shadow-card"
             >
-              <div className="mb-2.5 flex items-center justify-between">
-                <span className="text-sm font-semibold text-ink">{r.name}</span>
+              <div className="min-w-0">
+                <div className="text-sm font-semibold text-ink">{r.name}</div>
+                <div className="text-xs text-muted">
+                  Committed {formatRupees(r.committed)} · Paid {formatRupees(r.paid)}
+                </div>
+              </div>
+              <div className="flex-shrink-0 text-right">
+                <div className="font-mono text-sm font-medium text-ink">
+                  {r.allocated > 0 ? formatRupees(r.allocated) : "—"}
+                </div>
                 {overCommitted && (
-                  <span className="text-[11px] font-medium text-red-500">over allocation</span>
+                  <div className="text-[11px] font-medium text-red-500">over allocation</div>
                 )}
               </div>
-              <div className="mb-3 flex gap-[18px]">
-                <Stat label="Committed" value={formatRupees(r.committed)} small />
-                <Stat label="Paid" value={formatRupees(r.paid)} small />
-              </div>
-              <form action={setCategoryBudget} className="flex items-center gap-2.5">
-                <input type="hidden" name="name" value={r.name} />
-                <div className="flex flex-1 items-center gap-2 rounded-btn border border-field-border bg-field px-3.5 py-2.5">
-                  <span className="font-mono text-sm text-muted">₹</span>
-                  <input
-                    name="allocatedAmount"
-                    type="number"
-                    min="0"
-                    step="1"
-                    inputMode="numeric"
-                    defaultValue={r.allocated || ""}
-                    placeholder="Allocate"
-                    className="w-full bg-transparent font-mono text-sm text-ink outline-none placeholder:text-faint"
-                  />
-                </div>
-                <SubmitButton
-                  pendingLabel="Saving…"
-                  className="rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-xs font-semibold text-ink"
-                >
-                  Save
-                </SubmitButton>
-              </form>
             </div>
           );
         })}
       </div>
+
+      <div className="mb-2.5 text-[15px] font-semibold text-ink">Set a category budget</div>
+      <BudgetAllocationForm rows={rows} />
     </div>
   );
 }

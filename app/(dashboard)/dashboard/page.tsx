@@ -5,6 +5,7 @@ import { can } from "@/lib/permissions";
 import { formatRupees } from "@/lib/money";
 import { colorForCategory, initialsFor } from "@/lib/vendor-category";
 import { daysUntil } from "@/lib/dates";
+import { WeddingHeaderPicker } from "./wedding-header-picker";
 
 export default async function DashboardPage() {
   const wedding = await requireWedding();
@@ -68,10 +69,7 @@ export default async function DashboardPage() {
     <div className="px-5 pt-[60px]">
       <div className="mb-5 flex items-start justify-between">
         <div>
-          <div className="text-[13px] text-muted">Wedding</div>
-          <div className="font-display text-[26px] leading-tight tracking-[0.01em] text-ink">
-            {wedding.couple_names}
-          </div>
+          <WeddingHeaderPicker />
           {wedding.start_date && (
             <div className="mt-0.5 text-[13px] font-medium text-accent">
               {new Date(wedding.start_date).toLocaleDateString("en-IN", {

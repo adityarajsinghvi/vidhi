@@ -8,6 +8,7 @@ import { SelectField } from "@/components/select-field";
 import { DeleteVendorButton } from "./delete-vendor-button";
 import { updateVendor } from "../actions";
 import { SubmitButton } from "@/components/submit-button";
+import { SelectAllCheckboxes } from "@/components/select-all-checkboxes";
 
 export default async function EditVendorPage({
   params,
@@ -138,6 +139,7 @@ export default async function EditVendorPage({
           <div className="flex flex-col gap-2">
             <span className="pl-1 text-[13px] text-muted">Ceremonies</span>
             <div className="flex flex-wrap gap-2">
+              <SelectAllCheckboxes name="ceremonyIds" />
               {(ceremonies ?? []).map((c) => (
                 <label
                   key={c.id}
