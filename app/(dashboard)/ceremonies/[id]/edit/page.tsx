@@ -60,8 +60,8 @@ export default async function EditCeremonyPage({
           />
         </div>
 
-        <div className="flex gap-3">
-          <div className="flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-3 min-[420px]:flex-row">
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
             <label htmlFor="date" className="pl-1 text-[13px] text-muted">
               Date
             </label>
@@ -70,10 +70,10 @@ export default async function EditCeremonyPage({
               name="date"
               type="date"
               defaultValue={ceremony.date ?? ""}
-              className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
+              className="w-full rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
             />
           </div>
-          <div className="flex flex-1 flex-col gap-2">
+          <div className="flex min-w-0 flex-1 flex-col gap-2">
             <label htmlFor="time" className="pl-1 text-[13px] text-muted">
               Time
             </label>
@@ -82,7 +82,7 @@ export default async function EditCeremonyPage({
               name="time"
               type="time"
               defaultValue={ceremony.time ?? ""}
-              className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
+              className="w-full rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
             />
           </div>
         </div>

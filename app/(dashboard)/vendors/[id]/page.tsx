@@ -178,10 +178,10 @@ export default async function VendorDetailPage({
             ))}
             <form
               action={addVendorQuote}
-              className="flex items-center gap-2.5 rounded-card border border-field-border bg-card p-3.5 shadow-card"
+              className="flex flex-col gap-2.5 rounded-card border border-field-border bg-card p-3.5 shadow-card"
             >
               <input type="hidden" name="vendorId" value={vendor.id} />
-              <div className="flex flex-1 items-center gap-2 rounded-btn border border-field-border bg-field px-3.5 py-2.5">
+              <div className="flex items-center gap-2 rounded-btn border border-field-border bg-field px-3.5 py-2.5">
                 <span className="font-mono text-sm text-muted">₹</span>
                 <input
                   name="amount"
@@ -191,21 +191,23 @@ export default async function VendorDetailPage({
                   inputMode="numeric"
                   required
                   placeholder="New quote"
-                  className="w-full bg-transparent font-mono text-sm text-ink outline-none placeholder:text-faint"
+                  className="w-full min-w-0 bg-transparent font-mono text-sm text-ink outline-none placeholder:text-faint"
                 />
               </div>
-              <input
-                name="notes"
-                type="text"
-                placeholder="Notes"
-                className="flex-1 rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-faint"
-              />
-              <button
-                type="submit"
-                className="rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-xs font-semibold text-ink"
-              >
-                Add
-              </button>
+              <div className="flex flex-col gap-2.5 min-[420px]:flex-row">
+                <input
+                  name="notes"
+                  type="text"
+                  placeholder="Notes"
+                  className="min-w-0 flex-1 rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-faint"
+                />
+                <button
+                  type="submit"
+                  className="rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-xs font-semibold text-ink"
+                >
+                  Add quote
+                </button>
+              </div>
             </form>
           </div>
 

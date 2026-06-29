@@ -50,18 +50,18 @@ export default async function ContactsPage({
             placeholder="Name"
             className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-base text-ink outline-none placeholder:text-faint"
           />
-          <div className="flex gap-2.5">
+          <div className="flex flex-col gap-2.5 min-[420px]:flex-row">
             <input
               name="relation"
               type="text"
               placeholder="e.g. Dulha's mama"
-              className="flex-1 rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none placeholder:text-faint"
+              className="min-w-0 flex-1 rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none placeholder:text-faint"
             />
             <input
               name="phone"
               type="tel"
               placeholder="Phone"
-              className="flex-1 rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none placeholder:text-faint"
+              className="min-w-0 flex-1 rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none placeholder:text-faint"
             />
           </div>
           <input

@@ -61,18 +61,18 @@ export default async function RunSheetPage({
         className="mb-[22px] flex flex-col gap-3 rounded-card border border-field-border bg-card p-3.5 shadow-card"
       >
         <input type="hidden" name="ceremonyId" value={ceremony.id} />
-        <div className="flex gap-2.5">
+        <div className="flex flex-col gap-2.5 min-[420px]:flex-row">
           <input
             name="time"
             type="time"
-            className="w-[120px] rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
+            className="w-full min-w-0 rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none min-[420px]:w-[120px]"
           />
           <input
             name="title"
             type="text"
             required
             placeholder="e.g. Baraat assembles"
-            className="flex-1 rounded-btn border border-field-border bg-field px-4 py-3.5 text-base text-ink outline-none placeholder:text-faint"
+            className="min-w-0 flex-1 rounded-btn border border-field-border bg-field px-4 py-3.5 text-base text-ink outline-none placeholder:text-faint"
           />
         </div>
         <input
