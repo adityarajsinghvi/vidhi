@@ -8,7 +8,7 @@ export async function WeddingHeaderPicker() {
   const [weddings, active] = await Promise.all([listWeddings(), requireWedding()]);
 
   return (
-    <details className="relative">
+    <details className="group relative">
       <summary className="flex cursor-pointer list-none items-center gap-1.5 [&::-webkit-details-marker]:hidden">
         <div>
           <div className="text-[13px] text-muted">Wedding</div>
@@ -16,17 +16,19 @@ export async function WeddingHeaderPicker() {
             <span className="font-display text-[26px] leading-tight tracking-[0.01em] text-ink">
               {active.couple_names}
             </span>
-            {weddings.length > 1 && (
-              <svg viewBox="0 0 20 20" fill="none" className="mt-1 h-4 w-4 flex-shrink-0 text-muted">
-                <path
-                  d="M5 7.5L10 12.5L15 7.5"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              className="mt-1 h-4 w-4 flex-shrink-0 text-accent transition-transform duration-150 group-open:rotate-180"
+            >
+              <path
+                d="M5 7.5L10 12.5L15 7.5"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
         </div>
       </summary>
