@@ -1,6 +1,8 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/user";
 
 export type Role = "owner" | "coordinator" | "helper";
 
@@ -30,22 +32,29 @@ function flatten(rows: MembershipRow[] | null): ActiveWedding[] {
     .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
 }
 
+// Both the dashboard layout and every page under it call requireWedding(), so
+// without memoization each navigation paid for the membership query twice.
+// React's cache() dedupes calls within a single request (it does NOT persist
+// across requests/navigations) — same idea as listWeddings() below.
+const getMemberships = cache(async (userId: string) => {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("wedding_members")
+    .select("role, weddings(*)")
+    .eq("user_id", userId);
+  return flatten(data as MembershipRow[] | null);
+});
+
 // Guards every dashboard route: bounces signed-out users to /login and users
 // with no wedding membership to onboarding. A planner can own or be invited to
 // multiple weddings; the active one is remembered via cookie, else most recent.
 export async function requireWedding(): Promise<ActiveWedding> {
-  const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) {
+  const user = await getCurrentUser();
+  if (!user) {
     redirect("/login");
   }
 
-  const { data } = await supabase
-    .from("wedding_members")
-    .select("role, weddings(*)")
-    .eq("user_id", userData.user.id);
-
-  const weddings = flatten(data as MembershipRow[] | null);
+  const weddings = await getMemberships(user.id);
   if (weddings.length === 0) {
     redirect("/new-wedding");
   }
@@ -58,16 +67,10 @@ export async function requireWedding(): Promise<ActiveWedding> {
 }
 
 export async function listWeddings(): Promise<ActiveWedding[]> {
-  const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) {
+  const user = await getCurrentUser();
+  if (!user) {
     redirect("/login");
   }
 
-  const { data } = await supabase
-    .from("wedding_members")
-    .select("role, weddings(*)")
-    .eq("user_id", userData.user.id);
-
-  return flatten(data as MembershipRow[] | null);
+  return getMemberships(user.id);
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
+import { getCurrentUser } from "@/lib/supabase/user";
 import { can, ROLE_LABEL } from "@/lib/permissions";
 import { formatPhone } from "@/lib/phone";
 import { NotificationToggle } from "./notification-toggle";
@@ -13,8 +13,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function MorePage() {
   const active = await requireWedding();
-  const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
+  const user = await getCurrentUser();
 
   return (
     <div className="px-5 pt-[60px]">
@@ -94,8 +93,8 @@ export default async function MorePage() {
       <div className="mb-[22px] flex items-center justify-between gap-3 rounded-card border border-field-border bg-card p-3.5 shadow-card">
         <div className="min-w-0">
           <div className="text-sm font-medium text-ink">Signed in</div>
-          {userData.user?.phone && (
-            <div className="truncate text-xs text-muted">{formatPhone(userData.user.phone)}</div>
+          {user?.phone && (
+            <div className="truncate text-xs text-muted">{formatPhone(user.phone)}</div>
           )}
         </div>
         <form action={signOut}>
