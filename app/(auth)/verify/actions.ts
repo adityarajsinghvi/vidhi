@@ -30,15 +30,19 @@ export async function verifyOtp(formData: FormData) {
 
   cookieStore.delete("vidhi_pending_phone");
 
+  // Convert any pending phone invites into memberships before deciding where
+  // to send them — a freshly-invited helper owns no wedding but belongs to one.
+  await supabase.rpc("resolve_my_invites");
+
   const { data: userData } = await supabase.auth.getUser();
-  const { data: wedding } = await supabase
-    .from("weddings")
-    .select("id")
-    .eq("owner_user_id", userData.user?.id ?? "")
+  const { data: membership } = await supabase
+    .from("wedding_members")
+    .select("wedding_id")
+    .eq("user_id", userData.user?.id ?? "")
     .limit(1)
     .maybeSingle();
 
-  redirect(wedding ? "/dashboard" : "/new-wedding");
+  redirect(membership ? "/dashboard" : "/new-wedding");
 }
 
 export async function resendOtp() {

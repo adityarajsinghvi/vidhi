@@ -2,22 +2,22 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { generateShareToken } from "@/lib/share";
+import { requireWedding } from "@/lib/weddings";
+import { can } from "@/lib/permissions";
 
 export async function getOrCreateShareToken(): Promise<
   { success: true; token: string } | { success: false; error: string }
 > {
-  const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) {
-    return { success: false, error: "Not signed in" };
+  const active = await requireWedding();
+  if (!can.manageWedding(active.role)) {
+    return { success: false, error: "Only the owner can create a share link" };
   }
 
+  const supabase = await createClient();
   const { data: wedding } = await supabase
     .from("weddings")
     .select("id, share_token")
-    .eq("owner_user_id", userData.user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
+    .eq("id", active.id)
     .maybeSingle();
 
   if (!wedding) {
@@ -41,28 +41,16 @@ export async function getOrCreateShareToken(): Promise<
 export async function revokeShareToken(): Promise<
   { success: true } | { success: false; error: string }
 > {
+  const active = await requireWedding();
+  if (!can.manageWedding(active.role)) {
+    return { success: false, error: "Only the owner can revoke the share link" };
+  }
+
   const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) {
-    return { success: false, error: "Not signed in" };
-  }
-
-  const { data: wedding } = await supabase
-    .from("weddings")
-    .select("id")
-    .eq("owner_user_id", userData.user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (!wedding) {
-    return { success: false, error: "No wedding found" };
-  }
-
   const { error } = await supabase
     .from("weddings")
     .update({ share_token: null })
-    .eq("id", wedding.id);
+    .eq("id", active.id);
 
   if (error) return { success: false, error: error.message };
   return { success: true };

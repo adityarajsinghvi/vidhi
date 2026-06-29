@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
+import { can } from "@/lib/permissions";
 import { VENDOR_CATEGORIES } from "@/lib/vendor-category";
 import { SelectField } from "@/components/select-field";
 import { createVendor } from "./actions";
@@ -12,6 +14,9 @@ export default async function NewVendorPage({
 }) {
   const { error } = await searchParams;
   const wedding = await requireWedding();
+  if (!can.manageVendors(wedding.role)) {
+    redirect("/vendors");
+  }
   const supabase = await createClient();
 
   const { data: ceremonies } = await supabase

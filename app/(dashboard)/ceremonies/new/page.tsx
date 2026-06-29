@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { requireWedding } from "@/lib/weddings";
+import { can } from "@/lib/permissions";
 import { createCeremony } from "./actions";
 
 export default async function NewCeremonyPage({
@@ -7,6 +10,10 @@ export default async function NewCeremonyPage({
   searchParams: Promise<{ error?: string }>;
 }) {
   const { error } = await searchParams;
+  const wedding = await requireWedding();
+  if (!can.manageCeremonies(wedding.role)) {
+    redirect("/dashboard");
+  }
 
   return (
     <div className="px-5 pt-[60px]">

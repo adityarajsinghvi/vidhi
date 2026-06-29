@@ -2,6 +2,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
+export type Role = "owner" | "coordinator" | "helper";
+
 export type Wedding = {
   id: string;
   owner_user_id: string;
@@ -12,26 +14,39 @@ export type Wedding = {
   created_at: string;
 };
 
+export type ActiveWedding = Wedding & { role: Role };
+
 export const ACTIVE_WEDDING_COOKIE = "vidhi_active_wedding";
 
-// Guards every dashboard route: bounces signed-out users to /login and
-// users with no wedding yet to onboarding, so pages can assume both exist.
-// A planner can own multiple weddings; the active one is remembered via
-// a cookie (set by switchWedding), falling back to the most recent.
-export async function requireWedding(): Promise<Wedding> {
+type MembershipRow = { role: Role; weddings: Wedding | Wedding[] | null };
+
+function flatten(rows: MembershipRow[] | null): ActiveWedding[] {
+  return (rows ?? [])
+    .map((row) => {
+      const wedding = Array.isArray(row.weddings) ? row.weddings[0] : row.weddings;
+      return wedding ? { ...wedding, role: row.role } : null;
+    })
+    .filter((w): w is ActiveWedding => w !== null)
+    .sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+}
+
+// Guards every dashboard route: bounces signed-out users to /login and users
+// with no wedding membership to onboarding. A planner can own or be invited to
+// multiple weddings; the active one is remembered via cookie, else most recent.
+export async function requireWedding(): Promise<ActiveWedding> {
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) {
     redirect("/login");
   }
 
-  const { data: weddings } = await supabase
-    .from("weddings")
-    .select("*")
-    .eq("owner_user_id", userData.user.id)
-    .order("created_at", { ascending: false });
+  const { data } = await supabase
+    .from("wedding_members")
+    .select("role, weddings(*)")
+    .eq("user_id", userData.user.id);
 
-  if (!weddings || weddings.length === 0) {
+  const weddings = flatten(data as MembershipRow[] | null);
+  if (weddings.length === 0) {
     redirect("/new-wedding");
   }
 
@@ -42,18 +57,17 @@ export async function requireWedding(): Promise<Wedding> {
   return active ?? weddings[0];
 }
 
-export async function listWeddings(): Promise<Wedding[]> {
+export async function listWeddings(): Promise<ActiveWedding[]> {
   const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) {
     redirect("/login");
   }
 
-  const { data: weddings } = await supabase
-    .from("weddings")
-    .select("*")
-    .eq("owner_user_id", userData.user.id)
-    .order("created_at", { ascending: false });
+  const { data } = await supabase
+    .from("wedding_members")
+    .select("role, weddings(*)")
+    .eq("user_id", userData.user.id);
 
-  return weddings ?? [];
+  return flatten(data as MembershipRow[] | null);
 }

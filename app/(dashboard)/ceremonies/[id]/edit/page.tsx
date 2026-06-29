@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
+import { can } from "@/lib/permissions";
 import { updateCeremony } from "../actions";
 import { DeleteCeremonyButton } from "./delete-ceremony-button";
 
@@ -15,6 +16,9 @@ export default async function EditCeremonyPage({
   const { id } = await params;
   const { error } = await searchParams;
   const wedding = await requireWedding();
+  if (!can.manageCeremonies(wedding.role)) {
+    redirect("/dashboard");
+  }
   const supabase = await createClient();
 
   const { data: ceremony } = await supabase

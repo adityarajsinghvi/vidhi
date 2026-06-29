@@ -14,9 +14,9 @@ export default async function NewWeddingPage({
   const { data: userData } = await supabase.auth.getUser();
   const { count } = userData.user
     ? await supabase
-        .from("weddings")
+        .from("wedding_members")
         .select("id", { count: "exact", head: true })
-        .eq("owner_user_id", userData.user.id)
+        .eq("user_id", userData.user.id)
     : { count: 0 };
   const isFirstWedding = !count || count === 0;
 

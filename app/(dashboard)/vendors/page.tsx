@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
+import { can } from "@/lib/permissions";
 import { formatRupees } from "@/lib/money";
 import { colorForCategory, initialsFor } from "@/lib/vendor-category";
 
@@ -11,6 +12,8 @@ export default async function VendorsPage({
 }) {
   const { q } = await searchParams;
   const wedding = await requireWedding();
+  const viewMoney = can.viewMoney(wedding.role);
+  const manageVendors = can.manageVendors(wedding.role);
   const supabase = await createClient();
 
   let query = supabase
@@ -26,7 +29,7 @@ export default async function VendorsPage({
   const { data: vendors } = await query;
   const vendorIds = (vendors ?? []).map((v) => v.id);
   const { data: payments } =
-    vendorIds.length > 0
+    viewMoney && vendorIds.length > 0
       ? await supabase
           .from("payments")
           .select("vendor_id, amount")
@@ -44,12 +47,14 @@ export default async function VendorsPage({
         <div className="font-display text-[26px] leading-tight tracking-[0.01em] text-ink">
           Vendors
         </div>
-        <Link
-          href="/vendors/new"
-          className="flex h-9 w-9 items-center justify-center rounded-avatar bg-accent text-lg font-semibold text-accent-ink"
-        >
-          ＋
-        </Link>
+        {manageVendors && (
+          <Link
+            href="/vendors/new"
+            className="flex h-9 w-9 items-center justify-center rounded-avatar bg-accent text-lg font-semibold text-accent-ink"
+          >
+            ＋
+          </Link>
+        )}
       </div>
 
       <form className="mb-5">
@@ -86,14 +91,16 @@ export default async function VendorsPage({
                 <div className="text-sm font-semibold text-ink">{v.name}</div>
                 <div className="text-xs text-muted">{v.category}</div>
               </div>
-              <div className="text-right">
-                <div className="font-mono text-sm font-semibold text-ink">
-                  {formatRupees(v.quoted_amount)}
+              {viewMoney && (
+                <div className="text-right">
+                  <div className="font-mono text-sm font-semibold text-ink">
+                    {formatRupees(v.quoted_amount)}
+                  </div>
+                  <div className="text-[11px] text-muted">
+                    {pending > 0 ? `${formatRupees(pending)} due` : "Paid up"}
+                  </div>
                 </div>
-                <div className="text-[11px] text-muted">
-                  {pending > 0 ? `${formatRupees(pending)} due` : "Paid up"}
-                </div>
-              </div>
+              )}
             </Link>
           );
         })}

@@ -26,6 +26,7 @@ type ParsedVoiceCommand = {
   taskDescription: string | null;
   scheduledAt: string | null;
   messageText: string | null;
+  notAllowed?: boolean;
 };
 
 type Stage = "idle" | "recording" | "processing" | "confirm" | "done" | "error";
@@ -294,7 +295,9 @@ function VoiceConfirmCard({
 
       {parsed.intent === "unrecognized" && (
         <p className="text-sm text-muted">
-          Didn&apos;t catch a command in that. Try mentioning an amount, a vendor, or a task.
+          {parsed.notAllowed
+            ? "As a Helper you can only manage tasks by voice — try adding or completing a task."
+            : "Didn't catch a command in that. Try mentioning an amount, a vendor, or a task."}
         </p>
       )}
 

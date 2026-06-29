@@ -4,23 +4,13 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { requireWedding } from "@/lib/weddings";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
 async function currentWeddingId(): Promise<string | null> {
-  const supabase = await createClient();
-  const { data: userData } = await supabase.auth.getUser();
-  if (!userData.user) return null;
-
-  const { data: wedding } = await supabase
-    .from("weddings")
-    .select("id")
-    .eq("owner_user_id", userData.user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  return wedding?.id ?? null;
+  const wedding = await requireWedding();
+  return wedding.id;
 }
 
 const paymentSchema = z.object({

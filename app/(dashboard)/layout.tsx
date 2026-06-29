@@ -1,3 +1,4 @@
+import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
 import { BottomNav } from "@/components/bottom-nav";
 
@@ -6,6 +7,10 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Pick up any invites accepted while the user was already signed in.
+  const supabase = await createClient();
+  await supabase.rpc("resolve_my_invites");
+
   await requireWedding();
 
   return (

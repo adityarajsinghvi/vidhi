@@ -14,20 +14,20 @@ export async function switchWedding(formData: FormData) {
     redirect("/login");
   }
 
-  // Re-verify ownership server-side rather than trusting the posted id.
-  const { data: wedding } = await supabase
-    .from("weddings")
-    .select("id")
-    .eq("id", weddingId)
-    .eq("owner_user_id", userData.user.id)
+  // Re-verify membership server-side rather than trusting the posted id.
+  const { data: membership } = await supabase
+    .from("wedding_members")
+    .select("wedding_id")
+    .eq("wedding_id", weddingId)
+    .eq("user_id", userData.user.id)
     .maybeSingle();
 
-  if (!wedding) {
+  if (!membership) {
     redirect("/more");
   }
 
   const cookieStore = await cookies();
-  cookieStore.set(ACTIVE_WEDDING_COOKIE, wedding.id, {
+  cookieStore.set(ACTIVE_WEDDING_COOKIE, membership.wedding_id, {
     httpOnly: true,
     secure: true,
     sameSite: "lax",

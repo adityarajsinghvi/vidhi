@@ -37,9 +37,9 @@ export async function createWedding(formData: FormData) {
   const { coupleNames, startDate, endDate, budgetTotal } = parsed.data;
 
   const { count: existingCount } = await supabase
-    .from("weddings")
+    .from("wedding_members")
     .select("id", { count: "exact", head: true })
-    .eq("owner_user_id", userId);
+    .eq("user_id", userId);
 
   const { data: wedding, error } = await supabase
     .from("weddings")

@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
   const { data: dueReminders } = await supabase
     .from("reminders")
-    .select("id, wedding_id, message_text, wa_link, weddings(owner_user_id)")
+    .select("id, wedding_id, message_text, wa_link")
     .eq("sent", false)
     .lte("scheduled_at", new Date().toISOString());
 
@@ -20,16 +20,21 @@ export async function GET(request: Request) {
     return NextResponse.json({ sent: 0 });
   }
 
-  const ownerIds = [
-    ...new Set(
-      dueReminders
-        .map((r) => {
-          const wedding = Array.isArray(r.weddings) ? r.weddings[0] : r.weddings;
-          return wedding?.owner_user_id as string | undefined;
-        })
-        .filter((id): id is string => Boolean(id)),
-    ),
-  ];
+  const weddingIds = [...new Set(dueReminders.map((r) => r.wedding_id))];
+
+  // Notify everyone who can act on reminders: owners and coordinators.
+  const { data: members } = await supabase
+    .from("wedding_members")
+    .select("wedding_id, user_id")
+    .in("wedding_id", weddingIds)
+    .in("role", ["owner", "coordinator"]);
+
+  const userIdsByWedding = new Map<string, string[]>();
+  for (const m of members ?? []) {
+    const list = userIdsByWedding.get(m.wedding_id) ?? [];
+    list.push(m.user_id);
+    userIdsByWedding.set(m.wedding_id, list);
+  }
 
   type Subscription = {
     id: string;
@@ -39,12 +44,13 @@ export async function GET(request: Request) {
     auth_key: string;
   };
 
+  const recipientIds = [...new Set((members ?? []).map((m) => m.user_id))];
   const { data: subscriptions } =
-    ownerIds.length > 0
+    recipientIds.length > 0
       ? await supabase
           .from("push_subscriptions")
           .select("id, user_id, endpoint, p256dh_key, auth_key")
-          .in("user_id", ownerIds)
+          .in("user_id", recipientIds)
       : { data: [] as Subscription[] };
 
   const subsByUser = new Map<string, Subscription[]>();
@@ -58,9 +64,8 @@ export async function GET(request: Request) {
   let sentCount = 0;
 
   for (const reminder of dueReminders) {
-    const wedding = Array.isArray(reminder.weddings) ? reminder.weddings[0] : reminder.weddings;
-    const ownerId = wedding?.owner_user_id as string | undefined;
-    const subs = ownerId ? subsByUser.get(ownerId) ?? [] : [];
+    const userIds = userIdsByWedding.get(reminder.wedding_id) ?? [];
+    const subs = userIds.flatMap((uid) => subsByUser.get(uid) ?? []);
 
     if (subs.length > 0) {
       const { staleIds } = await sendPushToSubscriptions(subs, {

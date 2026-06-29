@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listWeddings, requireWedding } from "@/lib/weddings";
+import { ROLE_LABEL } from "@/lib/permissions";
 import { switchWedding } from "./wedding-actions";
 
 export async function WeddingSwitcher() {
@@ -20,21 +21,23 @@ export async function WeddingSwitcher() {
               <input type="hidden" name="weddingId" value={w.id} />
               <button type="submit" disabled={isActive} className="w-full text-left">
                 <div className="text-sm font-semibold text-ink">{w.couple_names}</div>
-                {w.start_date && (
-                  <div className="mt-0.5 text-xs text-muted">
-                    {new Date(w.start_date).toLocaleDateString("en-IN", {
+                <div className="mt-0.5 text-xs text-muted">
+                  {ROLE_LABEL[w.role]}
+                  {w.start_date &&
+                    ` · ${new Date(w.start_date).toLocaleDateString("en-IN", {
                       day: "numeric",
                       month: "short",
                       year: "numeric",
-                    })}
-                  </div>
-                )}
+                    })}`}
+                </div>
               </button>
             </form>
             {isActive && <span className="text-xs font-medium text-accent">Active</span>}
-            <Link href={`/weddings/${w.id}/edit`} className="text-xs font-medium text-muted">
-              Edit
-            </Link>
+            {w.role === "owner" && (
+              <Link href={`/weddings/${w.id}/edit`} className="text-xs font-medium text-muted">
+                Edit
+              </Link>
+            )}
           </div>
         );
       })}

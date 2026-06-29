@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { parseVoiceCommand } from "@/lib/gemini";
 import { fuzzyFind } from "@/lib/fuzzy-match";
+import { requireWedding } from "@/lib/weddings";
+import { can } from "@/lib/permissions";
 
 export async function POST(request: Request) {
   const supabase = await createClient();
@@ -10,17 +12,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { data: wedding } = await supabase
-    .from("weddings")
-    .select("id")
-    .eq("owner_user_id", userData.user.id)
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (!wedding) {
-    return NextResponse.json({ error: "No wedding found" }, { status: 404 });
-  }
+  const wedding = await requireWedding();
 
   const body = await request.json().catch(() => null);
   const audioBase64 = body?.audioBase64;
@@ -52,6 +44,18 @@ export async function POST(request: Request) {
       ceremonyNames: (ceremonies ?? []).map((c) => c.name),
       incompleteTaskDescriptions: (openTasks ?? []).map((t) => t.description),
     });
+
+    // Helpers can only act on tasks — refuse money/reminder intents up front.
+    if (
+      !can.viewMoney(wedding.role) &&
+      (parsed.intent === "payment_received" || parsed.intent === "schedule_message")
+    ) {
+      return NextResponse.json({
+        intent: "unrecognized",
+        transcript: parsed.transcript,
+        notAllowed: true,
+      });
+    }
 
     const vendor = fuzzyFind(vendors ?? [], parsed.vendorName);
     const ceremony = fuzzyFind(ceremonies ?? [], parsed.ceremonyName);

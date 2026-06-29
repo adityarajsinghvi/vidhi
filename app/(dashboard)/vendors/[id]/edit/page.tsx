@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
+import { can } from "@/lib/permissions";
 import { VENDOR_CATEGORIES } from "@/lib/vendor-category";
 import { SelectField } from "@/components/select-field";
 import { DeleteVendorButton } from "./delete-vendor-button";
@@ -17,6 +18,9 @@ export default async function EditVendorPage({
   const { id } = await params;
   const { error } = await searchParams;
   const wedding = await requireWedding();
+  if (!can.manageVendors(wedding.role)) {
+    redirect("/vendors");
+  }
   const supabase = await createClient();
 
   const [{ data: vendor }, { data: ceremonies }, { data: links }] = await Promise.all([
