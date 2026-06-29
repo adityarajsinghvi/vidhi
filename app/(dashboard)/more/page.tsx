@@ -1,14 +1,19 @@
+import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
 import { can, ROLE_LABEL } from "@/lib/permissions";
+import { formatPhone } from "@/lib/phone";
 import { NotificationToggle } from "./notification-toggle";
 import { ShareLink } from "./share-link";
 import { RemindersList } from "./reminders-list";
 import { WeddingSwitcher } from "./wedding-switcher";
 import { TeamSection } from "./team-section";
+import { signOut } from "./account-actions";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function MorePage() {
   const active = await requireWedding();
+  const supabase = await createClient();
+  const { data: userData } = await supabase.auth.getUser();
 
   return (
     <div className="px-5 pt-[60px]">
@@ -61,6 +66,21 @@ export default async function MorePage() {
           </div>
         </>
       )}
+
+      <div className="mb-2.5 text-[15px] font-semibold text-ink">Account</div>
+      <div className="mb-[22px] flex items-center justify-between gap-3 rounded-card border border-field-border bg-card p-3.5 shadow-card">
+        <div className="min-w-0">
+          <div className="text-sm font-medium text-ink">Signed in</div>
+          {userData.user?.phone && (
+            <div className="truncate text-xs text-muted">{formatPhone(userData.user.phone)}</div>
+          )}
+        </div>
+        <form action={signOut}>
+          <button type="submit" className="text-sm font-semibold text-red-500">
+            Sign out
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
