@@ -9,6 +9,7 @@ import { can } from "@/lib/permissions";
 import { SelectField } from "@/components/select-field";
 import { PaymentChatParser } from "./payment-chat-parser";
 import { recordPayment } from "./actions";
+import { addVendorQuote, useVendorQuote, deleteVendorQuote } from "./quote-actions";
 
 export default async function VendorDetailPage({
   params,
@@ -34,7 +35,7 @@ export default async function VendorDetailPage({
     notFound();
   }
 
-  const [{ data: payments }, { data: links }] = await Promise.all([
+  const [{ data: payments }, { data: links }, { data: quotes }] = await Promise.all([
     viewMoney
       ? supabase
           .from("payments")
@@ -46,6 +47,13 @@ export default async function VendorDetailPage({
       .from("vendor_ceremony")
       .select("ceremonies(id, name)")
       .eq("vendor_id", vendor.id),
+    viewMoney
+      ? supabase
+          .from("vendor_quotes")
+          .select("id, amount, notes, created_at")
+          .eq("vendor_id", vendor.id)
+          .order("created_at", { ascending: false })
+      : Promise.resolve({ data: [] as { id: string; amount: number; notes: string | null; created_at: string }[] }),
   ]);
 
   const totalPaid = (payments ?? []).reduce((sum, p) => sum + p.amount, 0);
@@ -124,6 +132,83 @@ export default async function VendorDetailPage({
 
       {viewMoney && (
         <>
+          <div className="mb-2.5 text-[15px] font-semibold text-ink">Quotes</div>
+          <div className="mb-[18px] flex flex-col gap-2.5">
+            {(quotes ?? []).length === 0 && (
+              <p className="text-sm text-muted">
+                No quotes recorded yet — log every offer you get before booking.
+              </p>
+            )}
+            {(quotes ?? []).map((q) => (
+              <div
+                key={q.id}
+                className="flex items-center justify-between gap-3 rounded-card border border-field-border bg-card p-3.5 shadow-card"
+              >
+                <div className="min-w-0">
+                  <div className="font-mono text-sm font-semibold text-ink">
+                    {formatRupees(q.amount)}
+                    {q.amount === vendor.quoted_amount && (
+                      <span className="ml-2 text-[11px] font-medium text-accent">selected</span>
+                    )}
+                  </div>
+                  {q.notes && <div className="truncate text-xs text-muted">{q.notes}</div>}
+                </div>
+                <div className="flex flex-shrink-0 items-center gap-2">
+                  {q.amount !== vendor.quoted_amount && (
+                    <form action={useVendorQuote}>
+                      <input type="hidden" name="vendorId" value={vendor.id} />
+                      <input type="hidden" name="amount" value={q.amount} />
+                      <button
+                        type="submit"
+                        className="rounded-btn border border-field-border bg-field px-3 py-2 text-xs font-semibold text-ink"
+                      >
+                        Use this
+                      </button>
+                    </form>
+                  )}
+                  <form action={deleteVendorQuote}>
+                    <input type="hidden" name="quoteId" value={q.id} />
+                    <input type="hidden" name="vendorId" value={vendor.id} />
+                    <button type="submit" className="px-1 text-base text-faint">
+                      ×
+                    </button>
+                  </form>
+                </div>
+              </div>
+            ))}
+            <form
+              action={addVendorQuote}
+              className="flex items-center gap-2.5 rounded-card border border-field-border bg-card p-3.5 shadow-card"
+            >
+              <input type="hidden" name="vendorId" value={vendor.id} />
+              <div className="flex flex-1 items-center gap-2 rounded-btn border border-field-border bg-field px-3.5 py-2.5">
+                <span className="font-mono text-sm text-muted">₹</span>
+                <input
+                  name="amount"
+                  type="number"
+                  min="0"
+                  step="1"
+                  inputMode="numeric"
+                  required
+                  placeholder="New quote"
+                  className="w-full bg-transparent font-mono text-sm text-ink outline-none placeholder:text-faint"
+                />
+              </div>
+              <input
+                name="notes"
+                type="text"
+                placeholder="Notes"
+                className="flex-1 rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-faint"
+              />
+              <button
+                type="submit"
+                className="rounded-btn border border-field-border bg-field px-3.5 py-2.5 text-xs font-semibold text-ink"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+
           <PaymentChatParser vendorId={vendor.id} />
 
           <div className="mb-2.5 text-[15px] font-semibold text-ink">Record a payment</div>

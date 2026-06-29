@@ -20,7 +20,7 @@ export default async function DashboardPage() {
       .order("date", { ascending: true }),
     supabase
       .from("vendors")
-      .select("id, name, category, quoted_amount")
+      .select("id, name, category, quoted_amount, balance_due_at")
       .eq("wedding_id", wedding.id),
   ]);
 
@@ -113,32 +113,23 @@ export default async function DashboardPage() {
         <span className="text-[13px] text-accent">{(ceremonies ?? []).length} events</span>
       </div>
       <div className="-mx-5 mb-[22px] flex gap-2.5 overflow-x-auto px-5">
-        {(ceremonies ?? []).map((c) => {
-          const inner = (
-            <>
-              <div className="mb-2.5 flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-accent-glow text-[13px] font-semibold text-accent">
-                {c.name.charAt(0).toUpperCase()}
-              </div>
-              <div className="text-sm font-semibold text-ink">{c.name}</div>
-              <div className="mt-0.5 text-xs text-muted">
-                {c.date
-                  ? new Date(c.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
-                  : "No date yet"}
-              </div>
-            </>
-          );
-          const cls =
-            "w-[124px] flex-shrink-0 rounded-card border border-field-border bg-card p-3.5 shadow-card";
-          return manageCeremonies ? (
-            <Link key={c.id} href={`/ceremonies/${c.id}/edit`} className={cls}>
-              {inner}
-            </Link>
-          ) : (
-            <div key={c.id} className={cls}>
-              {inner}
+        {(ceremonies ?? []).map((c) => (
+          <Link
+            key={c.id}
+            href={`/ceremonies/${c.id}/runsheet`}
+            className="w-[124px] flex-shrink-0 rounded-card border border-field-border bg-card p-3.5 shadow-card"
+          >
+            <div className="mb-2.5 flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-accent-glow text-[13px] font-semibold text-accent">
+              {c.name.charAt(0).toUpperCase()}
             </div>
-          );
-        })}
+            <div className="text-sm font-semibold text-ink">{c.name}</div>
+            <div className="mt-0.5 text-xs text-muted">
+              {c.date
+                ? new Date(c.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
+                : "No date yet"}
+            </div>
+          </Link>
+        ))}
         {manageCeremonies && (
           <Link
             href="/ceremonies/new"
@@ -177,7 +168,21 @@ export default async function DashboardPage() {
                   <div className="font-mono text-sm font-semibold text-ink">
                     {formatRupees(v.pendingAmount)}
                   </div>
-                  <div className="text-[11px] text-accent">balance due</div>
+                  {v.balance_due_at ? (
+                    <div
+                      className={`text-[11px] ${
+                        new Date(v.balance_due_at) < new Date() ? "text-red-500" : "text-accent"
+                      }`}
+                    >
+                      due{" "}
+                      {new Date(v.balance_due_at).toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-[11px] text-accent">balance due</div>
+                  )}
                 </div>
               </Link>
             ))}

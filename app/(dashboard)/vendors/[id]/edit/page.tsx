@@ -26,7 +26,7 @@ export default async function EditVendorPage({
   const [{ data: vendor }, { data: ceremonies }, { data: links }] = await Promise.all([
     supabase
       .from("vendors")
-      .select("id, name, category, phone, quoted_amount")
+      .select("id, name, category, phone, quoted_amount, balance_due_at")
       .eq("id", id)
       .eq("wedding_id", wedding.id)
       .maybeSingle(),
@@ -57,6 +57,7 @@ export default async function EditVendorPage({
 
       <form action={updateVendor} className="flex flex-col gap-4">
         <input type="hidden" name="vendorId" value={vendor.id} />
+        <input type="hidden" name="weddingId" value={wedding.id} />
 
         <div className="flex flex-col gap-2">
           <label htmlFor="name" className="pl-1 text-[13px] text-muted">
@@ -114,6 +115,22 @@ export default async function EditVendorPage({
               className="w-full bg-transparent font-mono text-base text-ink outline-none placeholder:text-faint"
             />
           </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="balanceDueAt" className="pl-1 text-[13px] text-muted">
+            Balance due date
+          </label>
+          <input
+            id="balanceDueAt"
+            name="balanceDueAt"
+            type="date"
+            defaultValue={vendor.balance_due_at ? vendor.balance_due_at.slice(0, 10) : ""}
+            className="rounded-btn border border-field-border bg-field px-4 py-3.5 text-sm text-ink outline-none"
+          />
+          <p className="pl-1 text-xs text-faint">
+            We&apos;ll auto-schedule a reminder the day before, while a balance remains.
+          </p>
         </div>
 
         {(ceremonies ?? []).length > 0 && (

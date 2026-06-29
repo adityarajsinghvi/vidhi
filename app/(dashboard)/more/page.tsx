@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { requireWedding } from "@/lib/weddings";
 import { can, ROLE_LABEL } from "@/lib/permissions";
@@ -31,6 +32,28 @@ export default async function MorePage() {
       </div>
 
       <TeamSection />
+
+      <div className="mb-2.5 text-[15px] font-semibold text-ink">Directory</div>
+      <Link
+        href="/contacts"
+        className="mb-[22px] flex items-center justify-between rounded-card border border-field-border bg-card p-3.5 shadow-card"
+      >
+        <span className="text-sm font-medium text-ink">Contacts</span>
+        <span className="text-muted">→</span>
+      </Link>
+
+      {can.viewMoney(active.role) && (
+        <>
+          <div className="mb-2.5 text-[15px] font-semibold text-ink">Budget</div>
+          <Link
+            href="/budget"
+            className="mb-[22px] flex items-center justify-between rounded-card border border-field-border bg-card p-3.5 shadow-card"
+          >
+            <span className="text-sm font-medium text-ink">Budget breakdown</span>
+            <span className="text-muted">→</span>
+          </Link>
+        </>
+      )}
 
       <div className="mb-2.5 text-[15px] font-semibold text-ink">Appearance</div>
       <div className="mb-[22px] rounded-card border border-field-border bg-card p-3.5 shadow-card">

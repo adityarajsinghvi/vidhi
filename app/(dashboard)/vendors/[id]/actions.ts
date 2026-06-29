@@ -53,20 +53,24 @@ export async function recordPayment(formData: FormData) {
 
 const vendorEditSchema = z.object({
   vendorId: z.string().uuid(),
+  weddingId: z.string().uuid(),
   name: z.string().trim().min(1, "Enter the vendor's name"),
   category: z.string().trim().min(1, "Pick a category"),
   phone: z.string().optional(),
   quotedAmount: z.string().optional(),
+  balanceDueAt: z.string().optional(),
 });
 
 export async function updateVendor(formData: FormData) {
   const vendorId = String(formData.get("vendorId"));
   const parsed = vendorEditSchema.safeParse({
     vendorId,
+    weddingId: formData.get("weddingId"),
     name: formData.get("name"),
     category: formData.get("category"),
     phone: formData.get("phone") || undefined,
     quotedAmount: formData.get("quotedAmount") || undefined,
+    balanceDueAt: formData.get("balanceDueAt") || undefined,
   });
 
   if (!parsed.success) {
@@ -85,6 +89,7 @@ export async function updateVendor(formData: FormData) {
       category: parsed.data.category,
       phone: parsed.data.phone || null,
       quoted_amount: parsed.data.quotedAmount ? Number(parsed.data.quotedAmount) : 0,
+      balance_due_at: parsed.data.balanceDueAt || null,
     })
     .eq("id", parsed.data.vendorId);
 
@@ -99,9 +104,29 @@ export async function updateVendor(formData: FormData) {
       .insert(ceremonyIds.map((ceremonyId) => ({ vendor_id: parsed.data.vendorId, ceremony_id: ceremonyId })));
   }
 
+  await supabase
+    .from("reminders")
+    .delete()
+    .eq("vendor_id", parsed.data.vendorId)
+    .eq("kind", "payment_due");
+
+  if (parsed.data.balanceDueAt) {
+    const dueDate = new Date(`${parsed.data.balanceDueAt}T10:00:00`);
+    const scheduledAt = new Date(dueDate.getTime() - 24 * 60 * 60 * 1000);
+    await supabase.from("reminders").insert({
+      wedding_id: parsed.data.weddingId,
+      vendor_id: parsed.data.vendorId,
+      kind: "payment_due",
+      message_text: `Hi ${parsed.data.name}, the balance is due tomorrow — could you confirm?`,
+      scheduled_at: scheduledAt.toISOString(),
+      sent: false,
+    });
+  }
+
   revalidatePath(`/vendors/${vendorId}`);
   revalidatePath("/vendors");
   revalidatePath("/dashboard");
+  revalidatePath("/more");
   redirect(`/vendors/${vendorId}`);
 }
 
